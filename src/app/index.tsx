@@ -14,7 +14,7 @@ export default function Inicio() {
       <StatusBar barStyle="light-content" />
 
       <View style={styles.header}>
-        <Text style={styles.logo}>CYBERVAULT_</Text>
+        <Text style={styles.logo}>CYBERVAULT_👀</Text>
         <Text style={styles.subtitulo}>COMMAND LIBRARY</Text>
       </View>
 

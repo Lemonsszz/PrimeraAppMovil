@@ -33,7 +33,7 @@ export default function Perfil() {
           <Text style={styles.avatarTexto}>A</Text>
         </View>
 
-        <Text style={styles.nombre}>AXEL</Text>
+        <Text style={styles.nombre}>LEMONS</Text>
         <Text style={styles.usuario}>@cyberuser</Text>
       </View>
 
