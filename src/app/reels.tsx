@@ -8,43 +8,80 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {Card, Button} from 'react-native-paper';
+import { useState, useEffect} from 'react'; //gestion de estados, y control de cambios
+import {ref, onValue} from 'firebase/database'; //ref permite diferenciar la rama que quiero traer
+import {database} from '../firebaseconfig';
+
 export default function Comandos() {
+ //definir las variables de los datos
+const [productos,setProductos]=useState([]);
+
+useEffect(()=>{
+  const productosObtener=ref(database,"Productos");
+  const prod=onValue(productosObtener, (snapshot)=>{
+    const datos=snapshot.val();
+    if (datos){
+      const listaProductos=Object.keys(datos).map((id)=>({
+        id:id,
+        nombre:datos[id].nombre,
+        precio:datos[id].precio,
+        imagen:datos[id].imagen,
+        descripcion:datos[id].descripcion
+        
+      }));
+      setProductos(listaProductos);
+    }
+    else{
+      setProductos([]);
+    }
+  })
+  //limpieza de datos
+  return()=>prod([]);
+})
+
+
+
+
  //Componentes interfaz
-  const click=()=>{
-    alert("Se hizo Click");
-  }
-const productos=[
-    {
-      id:"1",
-      nombre:"LAPTOP",
-      precio:4800,
-      imagen:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRujrRj4WOIVbXLj2Op_pZmCdjDcXsti64bZIQOHZs1sw&s=10"
-    },
-    {
-      id:"2",
-      nombre:"CELULAR",
-      precio:6500,
-      imagen:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThIgIluyN2jlstjdW7yUMSjemfqQOA2kE9KLDNX5JOJg&s=10"
-    },
-    {
-      id:"3",
-      nombre:"LAPTOP",
-      precio:4800,
-      imagen:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWIlnFivu0bnYORcbQEfhk9sMcBPbR08W2y5LTeteOyQYAougPc3cvCYI&s=10"
-    },
-    {
-      id:"4",
-      nombre:"CELULAR",
-      precio:6500,
-      imagen:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYgeskR25i-046LaOYyofc04xTtrx6j7E5E2PymS8il5ieaoILyTbYMhY&s=10"
-    },
-    {
-      id:"5",
-      nombre:"LAPTOP",
-      precio:4800,
-      imagen:"https://www.frotcom.com/sites/default/files/styles/asset_image_full/public/2023-10/The%20potential%20of%20connected%20vehicles%20and%20advanced%20technologies_b%20-%20Frotcom.jpg?itok=flaYirQm"
-    },
-  ]
+
+//  const productos=()=>{
+
+//  }
+//   const click=()=>{
+//     alert("Se hizo Click");
+//   }
+// //const productos=[
+//     {
+//       id:"1",
+//       nombre:"LAPTOP",
+//       precio:4800,
+//       imagen:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRujrRj4WOIVbXLj2Op_pZmCdjDcXsti64bZIQOHZs1sw&s=10"
+//     },
+//     {
+//       id:"2",
+//       nombre:"CELULAR",
+//       precio:6500,
+//       imagen:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThIgIluyN2jlstjdW7yUMSjemfqQOA2kE9KLDNX5JOJg&s=10"
+//     },
+//     {
+//       id:"3",
+//       nombre:"LAPTOP",
+//       precio:4800,
+//       imagen:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWIlnFivu0bnYORcbQEfhk9sMcBPbR08W2y5LTeteOyQYAougPc3cvCYI&s=10"
+//     },
+//     {
+//       id:"4",
+//       nombre:"CELULAR",
+//       precio:6500,
+//       imagen:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYgeskR25i-046LaOYyofc04xTtrx6j7E5E2PymS8il5ieaoILyTbYMhY&s=10"
+//     },
+//     {
+//       id:"5",
+//       nombre:"LAPTOP",
+//       precio:4800,
+//       imagen:"https://www.frotcom.com/sites/default/files/styles/asset_image_full/public/2023-10/The%20potential%20of%20connected%20vehicles%20and%20advanced%20technologies_b%20-%20Frotcom.jpg?itok=flaYirQm"
+//     },
+//   ]
   return (
     <View style={styles.contenedor}>
       <StatusBar barStyle="light-content" />
