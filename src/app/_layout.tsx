@@ -2,14 +2,15 @@ import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function TabLayout() {
+  
   return (
+
+    
     <Tabs
       screenOptions={{
         headerShown: false,
-
         tabBarActiveTintColor: '#00FF88',
         tabBarInactiveTintColor: '#526158',
-
         tabBarStyle: {
           height: 70,
           paddingTop: 5,
@@ -20,11 +21,11 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="Nombre"
         options={{
-          title: 'Inicio',
+          title: 'Nombre',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="terminal-outline" color={color} size={size} />
+            <Ionicons name="person-circle-outline" color={color} size={size} />
           ),
         }}
       />
@@ -32,9 +33,9 @@ export default function TabLayout() {
       <Tabs.Screen
         name="reels"
         options={{
-          title: 'Comandos',
+          title: 'Carrera',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="code-slash-outline" color={color} size={size} />
+            <Ionicons name="school" color={color} size={size} />
           ),
         }}
       />
@@ -42,10 +43,10 @@ export default function TabLayout() {
       <Tabs.Screen
         name="messages"
         options={{
-          title: 'Notas',
+          title: 'Semestre',
           tabBarIcon: ({ color, size }) => (
             <Ionicons
-              name="document-text-outline"
+              name="clipboard"
               color={color}
               size={size}
             />
@@ -56,9 +57,9 @@ export default function TabLayout() {
       <Tabs.Screen
         name="search"
         options={{
-          title: 'Buscar',
+          title: 'Materia',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="search-outline" color={color} size={size} />
+            <Ionicons name="book" color={color} size={size} />
           ),
         }}
       />

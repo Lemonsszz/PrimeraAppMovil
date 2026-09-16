@@ -4,78 +4,83 @@ import {
   StyleSheet,
   TouchableOpacity,
   StatusBar,
+  FlatList
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
+import {Card, Button} from 'react-native-paper';
 export default function Comandos() {
-
-
+ //Componentes interfaz
+  const click=()=>{
+    alert("Se hizo Click");
+  }
+const productos=[
+    {
+      id:"1",
+      nombre:"LAPTOP",
+      precio:4800,
+      imagen:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRujrRj4WOIVbXLj2Op_pZmCdjDcXsti64bZIQOHZs1sw&s=10"
+    },
+    {
+      id:"2",
+      nombre:"CELULAR",
+      precio:6500,
+      imagen:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThIgIluyN2jlstjdW7yUMSjemfqQOA2kE9KLDNX5JOJg&s=10"
+    },
+    {
+      id:"3",
+      nombre:"LAPTOP",
+      precio:4800,
+      imagen:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWIlnFivu0bnYORcbQEfhk9sMcBPbR08W2y5LTeteOyQYAougPc3cvCYI&s=10"
+    },
+    {
+      id:"4",
+      nombre:"CELULAR",
+      precio:6500,
+      imagen:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYgeskR25i-046LaOYyofc04xTtrx6j7E5E2PymS8il5ieaoILyTbYMhY&s=10"
+    },
+    {
+      id:"5",
+      nombre:"LAPTOP",
+      precio:4800,
+      imagen:"https://www.frotcom.com/sites/default/files/styles/asset_image_full/public/2023-10/The%20potential%20of%20connected%20vehicles%20and%20advanced%20technologies_b%20-%20Frotcom.jpg?itok=flaYirQm"
+    },
+  ]
   return (
     <View style={styles.contenedor}>
       <StatusBar barStyle="light-content" />
 
       <View style={styles.header}>
-        <Text style={styles.logo}>$ COMMANDS_</Text>
-        <Text style={styles.subtitulo}>COMANDOS GUARDADOS</Text>
+        <Text style={styles.logo}>CARRERA</Text>
+        <Text style={styles.logo}>INFORMACIÓN ACADÉMICA</Text>
+        <Text style={styles.subtitulo}>Estudios Universitarios</Text>
       </View>
-
-      <View style={styles.comando}>
-        <Text style={styles.categoria}>NETWORKING</Text>
-
-        <Text style={styles.nombre}>ip addr</Text>
-
-        <Text style={styles.descripcion}>
-          Muestra información de las interfaces de red del sistema.
-        </Text>
-
-        <TouchableOpacity style={styles.boton}>
-          <Text style={styles.textoBoton}>VER COMANDO</Text>
-                  <Ionicons style={styles.icono}
-                    name="return-down-forward-outline"
-                    size={50}
-                    color="#00FF88"
-                  />
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.comando}>
-        <Text style={styles.categoria}>LINUX</Text>
-
-        <Text style={styles.nombre}>ls -la</Text>
-
-        <Text style={styles.descripcion}>
-          Lista archivos y directorios incluyendo archivos ocultos.
-        </Text>
-
-        <TouchableOpacity style={styles.boton}>
-          <Text style={styles.textoBoton}>VER COMANDO</Text>
-              <Ionicons style={styles.icono}
-                name="return-down-forward-outline"
-                size={50}
-                color="#00FF88"
+  
+      <FlatList
+          data={productos}
+          numColumns={3}
+          keyExtractor={(item)=>item.id}
+          renderItem={({item})=>(
+            <Card style={styles.card}>
+              <Card.Cover
+                source={{uri:item.imagen}}
               />
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.comando}>
-        <Text style={styles.categoria}>SYSTEM</Text>
-
-        <Text style={styles.nombre}>whoami</Text>
-
-        <Text style={styles.descripcion}>
-          Muestra el usuario actualmente activo en el sistema.
-        </Text>
-
-        <TouchableOpacity style={styles.boton}>
-          <Text style={styles.textoBoton}>VER COMANDO</Text>
-                    <Ionicons style={styles.icono}
-                    name="return-down-forward-outline"
-                    size={50}
-                    color="#00FF88"
-                  />
-        </TouchableOpacity>
-      </View>
+              <Card.Content>
+                <Text style={styles.texto}>{item.nombre} </Text>
+              </Card.Content>
+              <Card.Actions>
+                <Button
+                  mode="outlined"
+                  onPress={()=>alert(item.nombre)}
+                >
+                  VER CARRERA
+                </Button>
+              </Card.Actions>
+            </Card>
+          )}  
+      />
     </View>
+
+
   );
 }
 
@@ -159,4 +164,11 @@ const styles = StyleSheet.create({
     marginRight: 8,
     
   },
+    texto:{
+    fontSize:30
+  },
+  card:{
+    flex:1,
+    margin:10
+  }
 });

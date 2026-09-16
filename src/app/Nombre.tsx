@@ -7,40 +7,34 @@ import {
   StatusBar,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
+import { Appbar } from 'react-native-paper';
 export default function Inicio() {
   return (
     <View style={styles.contenedor}>
-      <StatusBar barStyle="light-content" />
-
+      <Appbar.Header style={styles.categoria}>
+        <Appbar.Content title="ESTUDIANTE"></Appbar.Content>
+      </Appbar.Header>
       <View style={styles.header}>
-        <Text style={styles.logo}>CYBERVAULT_👀</Text>
-        <Text style={styles.subtitulo}>COMMAND LIBRARY</Text>
+        <Text style={styles.logo}><Ionicons style={styles.icono_sombrero}
+                name="school"
+                size={20}
+                color="#00FF88"/> DATOS DEL ESTUDIANTE </Text>
+        <Text style={styles.subtitulo}>NOMBRE COMPLETO: Romel Axel Colque Murillo</Text>
+        <Text style={styles.subtitulo}>CÓDIGO DE ESTUDIANTE: 121137</Text>
+        <Text style={styles.subtitulo}>MATERIA: Desarrollo de Aplicaciones Móviles I</Text>
       </View>
 
       <Image
         source={{
-          uri: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+          uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQH6mWFGlAV6MKH6lK_iMDqJb3zbikc3Ecm4FQh8ksnmA&s=10',
         }}
         style={styles.imagen}
       />
 
       <View style={styles.contenido}>
-        <Text style={styles.titulo}>$ MIS COMANDOS</Text>
+        <Text style={styles.titulo}>ESTUDIANTE DE UDABOL</Text>
 
-        <Text style={styles.descripcion}>
-          Guarda, organiza y consulta tus comandos de ciberseguridad desde
-          cualquier lugar.
-        </Text>
 
-        <TouchableOpacity style={styles.boton} activeOpacity={0.8}>
-
-          <Text style={styles.textoBoton}><Ionicons style={styles.icono}
-                name="add-circle-outline"
-                size={50}
-                color="#00FF88"
-              />AGREGAR COMANDO </Text>
-        </TouchableOpacity>
       </View>
     </View>
   );
@@ -132,4 +126,21 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     letterSpacing: 1,
   },
+    icono_sombrero: {
+    color: '#00FF88',
+    fontSize: 30,
+    fontWeight: '900',
+    marginRight: 15,
+  },
+    categoria: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#49815f',
+    borderWidth: 1,
+    borderColor: '#123D29',
+    borderRadius: 10,
+    padding: 16,
+    marginBottom: 12,
+  },
+
 });

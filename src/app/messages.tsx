@@ -6,15 +6,17 @@ import {
   StatusBar,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
+import { Appbar } from 'react-native-paper';
 export default function Categorias() {
   return (
     <View style={styles.contenedor}>
       <StatusBar barStyle="light-content" />
-
+      <Appbar.Header style={styles.categoria}>
+        <Appbar.Content title="Semestre"></Appbar.Content>
+      </Appbar.Header>
       <View style={styles.header}>
-        <Text style={styles.logo}>$ CATEGORIES_</Text>
-        <Text style={styles.subtitulo}>ORGANIZA TUS COMANDOS</Text>
+        <Text style={styles.logo}>SEMESTRE</Text>
+        <Text style={styles.subtitulo}>6TO SEMESTRE</Text>
       </View>
 
       <TouchableOpacity style={styles.categoria}>
@@ -25,9 +27,9 @@ export default function Categorias() {
         />
 
         <View style={styles.informacion}>
-          <Text style={styles.nombre}>NETWORKING</Text>
+          <Text style={styles.nombre}>PARALELO</Text>
           <Text style={styles.descripcion}>
-            Redes y administración de conexiones
+            Perteneciente al Paralelo "B"
           </Text>
         </View>
       </TouchableOpacity>
@@ -39,9 +41,9 @@ export default function Categorias() {
           color="#00FF88"
         />
         <View style={styles.informacion}>
-          <Text style={styles.nombre}>LINUX</Text>
+          <Text style={styles.nombre}>GESTION</Text>
           <Text style={styles.descripcion}>
-            Comandos y herramientas de Linux
+            Gestión: 2026 - 2do Periodo Académico
           </Text>
         </View>
       </TouchableOpacity>
@@ -54,9 +56,9 @@ export default function Categorias() {
         />
 
         <View style={styles.informacion}>
-          <Text style={styles.nombre}>WINDOWS</Text>
+          <Text style={styles.nombre}>TURNO</Text>
           <Text style={styles.descripcion}>
-            Administración del sistema Windows
+            Pasando clases en turno tarde
           </Text>
         </View>
       </TouchableOpacity>
@@ -69,25 +71,9 @@ export default function Categorias() {
         />
 
         <View style={styles.informacion}>
-          <Text style={styles.nombre}>SECURITY</Text>
+          <Text style={styles.nombre}>NÚMERO DE MATERIAS</Text>
           <Text style={styles.descripcion}>
-            Comandos relacionados con seguridad
-          </Text>
-        </View>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.categoria}>
-        <Ionicons style={styles.icono}
-          name="shield-checkmark"
-          size={40}
-          color="#00FF88"
-        />
-
-        <View style={styles.informacion}>
-          <Text style={styles.nombre}>RECON</Text>
-          <Text style={styles.descripcion}>
-            Información y reconocimiento de sistemas
-          </Text>
+            Cuenta con: 6         </Text>
         </View>
       </TouchableOpacity>
     </View>
@@ -122,7 +108,7 @@ const styles = StyleSheet.create({
   categoria: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#080D0A',
+    backgroundColor: '#49815f',
     borderWidth: 1,
     borderColor: '#123D29',
     borderRadius: 10,
@@ -149,7 +135,7 @@ const styles = StyleSheet.create({
   },
 
   descripcion: {
-    color: '#718078',
+    color: '#02371b',
     fontSize: 12,
     marginTop: 4,
   },
