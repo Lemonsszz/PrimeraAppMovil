@@ -10,6 +10,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyDaMbDwKGe7_1ADMyi-ORuzL_1N3nK4LC8",
   authDomain: "aplicaciones-mo-p.firebaseapp.com",
   projectId: "aplicaciones-mo-p",
+  databaseURL: "https://aplicaciones-mo-p-default-rtdb.firebaseio.com/",
   storageBucket: "aplicaciones-mo-p.firebasestorage.app",
   messagingSenderId: "1051017501535",
   appId: "1:1051017501535:web:66519cefbc7edf9d0df4ea",
