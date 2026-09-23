@@ -30,7 +30,7 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="reels"
+        name="comandos"
         options={{
           title: 'Comandos',
           tabBarIcon: ({ color, size }) => (
@@ -40,7 +40,7 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="messages"
+        name="notas"
         options={{
           title: 'Notas',
           tabBarIcon: ({ color, size }) => (
