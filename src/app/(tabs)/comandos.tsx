@@ -11,7 +11,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Card, Button } from 'react-native-paper';
 import { useState, useEffect } from 'react';
 import { ref, onValue } from 'firebase/database';
-import { database } from '../firebaseconfig';
+import { database } from '../../firebaseconfig';
 
 export default function Comandos() {
   console.log('🔥 ENTRE A COMANDOS');

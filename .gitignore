@@ -33,6 +33,10 @@ yarn-error.*
 # local env files
 .env*.local
 
+# Firebase: la clave de servicio es SECRETA, nunca subirla
+google-service-account.json
+*firebase-adminsdk*.json
+
 # typescript
 *.tsbuildinfo
 

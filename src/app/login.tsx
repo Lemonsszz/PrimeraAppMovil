@@ -234,6 +234,20 @@ export default function Login() {
 
         </TouchableOpacity>
 
+
+        {/* ENTRAR SIN CUENTA (para probar notificaciones) */}
+
+        <TouchableOpacity
+          style={styles.botonInvitado}
+          onPress={() => router.replace('/inicio')}
+        >
+
+          <Text style={styles.textoInvitado}>
+            [ ENTRAR COMO INVITADO ]
+          </Text>
+
+        </TouchableOpacity>
+
       </View>
 
 
@@ -428,6 +442,17 @@ const styles = StyleSheet.create({
     color: '#00FF88',
     fontWeight: 'bold',
     fontSize: 12,
+    letterSpacing: 1,
+  },
+
+  botonInvitado: {
+    marginTop: 18,
+    alignItems: 'center',
+  },
+
+  textoInvitado: {
+    color: '#526158',
+    fontSize: 11,
     letterSpacing: 1,
   },
 
