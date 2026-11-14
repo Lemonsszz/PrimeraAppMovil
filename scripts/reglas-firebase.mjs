@@ -1,30 +1,56 @@
 /**
- * Añade la lectura publica del nodo `contenidos` a las reglas de Realtime Database,
- * conservando el resto de reglas existentes (escritura solo autenticada).
+ * Publica las reglas de Realtime Database que necesita la app, conservando
+ * el resto de reglas existentes:
+ *
+ * - `contenidos`: lectura publica, escritura autenticada.
+ * - `retos`: lectura publica (el invitado puede jugar), escritura autenticada.
+ * - `progreso/{uid}`: solo el dueno puede leer y escribir su progreso.
  *
  * Uso:
- *   node scripts/reglas-firebase.mjs --dry   # muestra las reglas actuales
- *   node scripts/reglas-firebase.mjs         # aplica el cambio
+ *   node scripts/reglas-firebase.mjs --dry   # muestra el resultado
+ *   node scripts/reglas-firebase.mjs         # publica
  */
 import { dbRequest } from './firebase-admin.mjs';
 
 const DRY_RUN = process.argv.includes('--dry');
-const REGLA_CONTENIDOS = { '.read': true, '.write': 'auth != null' };
+
+const REGLAS_NUEVAS = {
+  contenidos: { '.read': true, '.write': 'auth != null' },
+  retos: { '.read': true, '.write': 'auth != null' },
+  progreso: {
+    $uid: {
+      '.read': 'auth != null && auth.uid == $uid',
+      '.write': 'auth != null && auth.uid == $uid',
+    },
+  },
+};
+
+function iguales(a, b) {
+  return JSON.stringify(a) === JSON.stringify(b);
+}
 
 async function main() {
   const actuales = await dbRequest('.settings/rules.json');
-  console.log('Reglas actuales:\n', JSON.stringify(actuales, null, 2), '\n');
-
   const reglas = { ...(actuales?.rules ?? {}) };
-  if (reglas.contenidos) {
-    console.log('El nodo `contenidos` ya tiene reglas:', JSON.stringify(reglas.contenidos));
+
+  let cambios = 0;
+  for (const [nodo, regla] of Object.entries(REGLAS_NUEVAS)) {
+    if (iguales(reglas[nodo], regla)) {
+      console.log(`= ${nodo}: ya estaba configurado`);
+      continue;
+    }
+    reglas[nodo] = regla;
+    cambios += 1;
+    console.log(`+ ${nodo}: se anade/actualiza`);
+  }
+
+  if (cambios === 0) {
+    console.log('\nNo hay cambios que publicar.');
     return;
   }
 
-  reglas.contenidos = REGLA_CONTENIDOS;
   const nuevas = { rules: reglas };
-
-  console.log('Reglas nuevas:\n', JSON.stringify(nuevas, null, 2));
+  console.log('\nReglas resultantes:\n', JSON.stringify(nuevas, null, 2));
 
   if (DRY_RUN) {
     console.log('\nNada se aplico. Ejecuta sin --dry para publicar.');
@@ -32,10 +58,12 @@ async function main() {
   }
 
   await dbRequest('.settings/rules.json', { method: 'PUT', body: nuevas });
-  console.log('\nReglas publicadas.');
+  console.log(`\nReglas publicadas (${cambios} nodo(s) actualizado(s)).`);
 
-  const verificacion = await dbRequest('.settings/rules.json');
-  console.log('Nodo `contenidos`:', JSON.stringify(verificacion?.rules?.contenidos));
+  const verificacion = (await dbRequest('.settings/rules.json'))?.rules ?? {};
+  for (const nodo of Object.keys(REGLAS_NUEVAS)) {
+    console.log(`  ${nodo}:`, JSON.stringify(verificacion[nodo]));
+  }
 }
 
 main().catch((error) => {
