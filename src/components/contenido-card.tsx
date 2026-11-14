@@ -58,14 +58,14 @@ const styles = StyleSheet.create({
   tarjeta: {
     backgroundColor: '#080D0A',
     borderWidth: 1,
-    borderColor: '#123D29',
+    borderColor: '#3E6A3D',
     borderRadius: 10,
     marginBottom: 15,
     overflow: 'hidden',
   },
 
   categoria: {
-    color: '#00FF88',
+    color: '#61CF5A',
     fontSize: 11,
     fontWeight: '800',
     letterSpacing: 2,
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   },
 
   resumen: {
-    color: '#819187',
+    color: '#63AD58',
     fontSize: 13,
     lineHeight: 19,
   },
@@ -89,14 +89,14 @@ const styles = StyleSheet.create({
     marginTop: 12,
     backgroundColor: '#050805',
     borderWidth: 1,
-    borderColor: '#123D29',
+    borderColor: '#3E6A3D',
     borderRadius: 6,
     paddingVertical: 8,
     paddingHorizontal: 10,
   },
 
   codigo: {
-    color: '#00FF88',
+    color: '#61CF5A',
     fontSize: 12,
     fontFamily: 'monospace',
   },
@@ -109,10 +109,10 @@ const styles = StyleSheet.create({
   },
 
   etiqueta: {
-    color: '#718078',
+    color: '#63AD58',
     fontSize: 10,
     borderWidth: 1,
-    borderColor: '#123D29',
+    borderColor: '#3E6A3D',
     borderRadius: 4,
     paddingVertical: 2,
     paddingHorizontal: 6,
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 6,
     borderTopWidth: 1,
-    borderTopColor: '#123D29',
+    borderTopColor: '#3E6A3D',
     paddingTop: 10,
     paddingBottom: 12,
   },

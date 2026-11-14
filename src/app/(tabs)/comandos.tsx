@@ -72,7 +72,7 @@ export default function Comandos() {
       </View>
 
       {cargando ? (
-        <ActivityIndicator style={styles.cargando} color="#00FF88" size="large" />
+        <ActivityIndicator style={styles.cargando} color="#61CF5A" size="large" />
       ) : (
         <FlatList
           data={categorias}
@@ -94,7 +94,7 @@ export default function Comandos() {
                 onPress={() => abrirCategoria(item.categoria)}
               >
                 <View style={styles.iconoCaja}>
-                  <Ionicons name={info.icono} size={26} color="#00FF88" />
+                  <Ionicons name={info.icono} size={26} color="#61CF5A" />
                 </View>
 
                 <View style={styles.categoriaTexto}>
@@ -112,7 +112,7 @@ export default function Comandos() {
                 <Ionicons
                   name="chevron-forward-outline"
                   size={18}
-                  color="#526158"
+                  color="#50864C"
                 />
               </TouchableOpacity>
             );
@@ -135,13 +135,13 @@ const styles = StyleSheet.create({
   },
 
   logo: {
-    color: '#00FF88',
+    color: '#61CF5A',
     fontSize: 26,
     fontWeight: '900',
   },
 
   subtitulo: {
-    color: '#526158',
+    color: '#50864C',
     fontSize: 11,
     letterSpacing: 3,
     marginTop: 5,
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     gap: 12,
     backgroundColor: '#080D0A',
     borderWidth: 1,
-    borderColor: '#123D29',
+    borderColor: '#3E6A3D',
     borderRadius: 10,
     paddingVertical: 14,
     paddingHorizontal: 14,
@@ -172,9 +172,9 @@ const styles = StyleSheet.create({
     width: 46,
     height: 46,
     borderRadius: 23,
-    backgroundColor: '#071A10',
+    backgroundColor: '#050805',
     borderWidth: 1,
-    borderColor: '#123D29',
+    borderColor: '#3E6A3D',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
   },
 
   categoriaDetalle: {
-    color: '#718078',
+    color: '#63AD58',
     fontSize: 11,
     marginTop: 4,
     lineHeight: 15,
@@ -203,13 +203,13 @@ const styles = StyleSheet.create({
   },
 
   contadorNumero: {
-    color: '#00FF88',
+    color: '#61CF5A',
     fontSize: 18,
     fontWeight: '900',
   },
 
   contadorEtiqueta: {
-    color: '#526158',
+    color: '#50864C',
     fontSize: 8,
     fontWeight: '800',
     letterSpacing: 1,
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
   },
 
   vacio: {
-    color: '#526158',
+    color: '#50864C',
     fontSize: 13,
     marginTop: 20,
     lineHeight: 20,

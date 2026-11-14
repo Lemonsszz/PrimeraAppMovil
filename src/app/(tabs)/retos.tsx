@@ -182,18 +182,18 @@ export default function Retos() {
 
         <View style={styles.chips}>
           <View style={styles.chip}>
-            <Ionicons name="flame-outline" size={14} color="#FF9F43" />
+            <Ionicons name="flame-outline" size={14} color="#63AD58" />
             <Text style={styles.chipTexto}>RACHA {racha}</Text>
           </View>
           <View style={styles.chip}>
-            <Ionicons name="trophy-outline" size={14} color="#00FF88" />
+            <Ionicons name="trophy-outline" size={14} color="#61CF5A" />
             <Text style={styles.chipTexto}>PUNTOS {puntosTotales}</Text>
           </View>
           {!uid ? <Text style={styles.invitado}>MODO INVITADO</Text> : null}
         </View>
 
         {cargando ? (
-          <ActivityIndicator style={styles.cargando} color="#00FF88" size="large" />
+          <ActivityIndicator style={styles.cargando} color="#61CF5A" size="large" />
         ) : error ? (
           <View style={styles.errorCaja}>
             <Text style={styles.errorTexto}>{error}</Text>
@@ -235,11 +235,11 @@ export default function Retos() {
 
             <View style={styles.recompensas}>
               <View style={styles.recompensa}>
-                <Ionicons name="help-circle-outline" size={16} color="#00FF88" />
+                <Ionicons name="help-circle-outline" size={16} color="#61CF5A" />
                 <Text style={styles.recompensaTexto}>{total} preguntas</Text>
               </View>
               <View style={styles.recompensa}>
-                <Ionicons name="star-outline" size={16} color="#00FF88" />
+                <Ionicons name="star-outline" size={16} color="#61CF5A" />
                 <Text style={styles.recompensaTexto}>
                   {total * PUNTOS_POR_ACIERTO} pts
                 </Text>
@@ -375,7 +375,7 @@ function VistaResumen({
         <Ionicons
           name={perfecto ? 'trophy' : 'checkmark-circle-outline'}
           size={54}
-          color="#00FF88"
+          color="#61CF5A"
         />
       </View>
 
@@ -398,7 +398,7 @@ function VistaResumen({
       </View>
 
       {guardando ? (
-        <ActivityIndicator color="#00FF88" style={styles.guardando} />
+        <ActivityIndicator color="#61CF5A" style={styles.guardando} />
       ) : null}
 
       {invitado ? (
@@ -435,13 +435,13 @@ const styles = StyleSheet.create({
   },
 
   logo: {
-    color: '#00FF88',
+    color: '#61CF5A',
     fontSize: 24,
     fontWeight: '900',
   },
 
   subtitulo: {
-    color: '#526158',
+    color: '#50864C',
     fontSize: 10,
     letterSpacing: 2,
     marginTop: 5,
@@ -459,7 +459,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 5,
     borderWidth: 1,
-    borderColor: '#123D29',
+    borderColor: '#3E6A3D',
     borderRadius: 20,
     paddingVertical: 5,
     paddingHorizontal: 10,
@@ -473,7 +473,7 @@ const styles = StyleSheet.create({
   },
 
   invitado: {
-    color: '#526158',
+    color: '#50864C',
     fontSize: 9,
     letterSpacing: 1,
     marginLeft: 'auto',
@@ -486,13 +486,13 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#080D0A',
     borderWidth: 1,
-    borderColor: '#123D29',
+    borderColor: '#3E6A3D',
     borderRadius: 12,
     padding: 18,
   },
 
   cardEtiqueta: {
-    color: '#00FF88',
+    color: '#61CF5A',
     fontSize: 10,
     fontWeight: '800',
     letterSpacing: 2,
@@ -507,7 +507,7 @@ const styles = StyleSheet.create({
   },
 
   cardTexto: {
-    color: '#819187',
+    color: '#63AD58',
     fontSize: 13,
     lineHeight: 20,
     marginTop: 10,
@@ -526,7 +526,7 @@ const styles = StyleSheet.create({
   },
 
   recompensaTexto: {
-    color: '#C9D6CE',
+    color: '#63AD58',
     fontSize: 11,
     fontWeight: '700',
   },
@@ -536,7 +536,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: '#00FF88',
+    backgroundColor: '#61CF5A',
     borderRadius: 8,
     paddingVertical: 14,
     marginTop: 18,
@@ -550,7 +550,7 @@ const styles = StyleSheet.create({
   },
 
   aviso: {
-    color: '#526158',
+    color: '#50864C',
     fontSize: 11,
     lineHeight: 16,
     marginTop: 12,
@@ -559,7 +559,7 @@ const styles = StyleSheet.create({
 
   barraFondo: {
     height: 5,
-    backgroundColor: '#123D29',
+    backgroundColor: '#3E6A3D',
     borderRadius: 3,
     overflow: 'hidden',
     marginBottom: 12,
@@ -567,11 +567,11 @@ const styles = StyleSheet.create({
 
   barraRelleno: {
     height: '100%',
-    backgroundColor: '#00FF88',
+    backgroundColor: '#61CF5A',
   },
 
   contador: {
-    color: '#526158',
+    color: '#50864C',
     fontSize: 10,
     fontWeight: '800',
     letterSpacing: 1.5,
@@ -595,7 +595,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 10,
     borderWidth: 1,
-    borderColor: '#123D29',
+    borderColor: '#3E6A3D',
     backgroundColor: '#050805',
     borderRadius: 8,
     paddingVertical: 12,
@@ -603,8 +603,8 @@ const styles = StyleSheet.create({
   },
 
   opcionCorrecta: {
-    borderColor: '#00FF88',
-    backgroundColor: '#071A10',
+    borderColor: '#61CF5A',
+    backgroundColor: '#050805',
   },
 
   opcionIncorrecta: {
@@ -613,14 +613,14 @@ const styles = StyleSheet.create({
   },
 
   letra: {
-    color: '#00FF88',
+    color: '#61CF5A',
     fontSize: 12,
     fontWeight: '900',
     width: 16,
   },
 
   opcionTexto: {
-    color: '#E6EFE9',
+    color: '#FFFFFF',
     fontSize: 13,
     flex: 1,
     lineHeight: 18,
@@ -634,8 +634,8 @@ const styles = StyleSheet.create({
   },
 
   explicacionOk: {
-    borderColor: '#1E5C3C',
-    backgroundColor: '#071A10',
+    borderColor: '#3E6A3D',
+    backgroundColor: '#050805',
   },
 
   explicacionMal: {
@@ -644,7 +644,7 @@ const styles = StyleSheet.create({
   },
 
   explicacionTitulo: {
-    color: '#00FF88',
+    color: '#61CF5A',
     fontSize: 11,
     fontWeight: '900',
     letterSpacing: 1,
@@ -652,7 +652,7 @@ const styles = StyleSheet.create({
   },
 
   explicacionTexto: {
-    color: '#C9D6CE',
+    color: '#63AD58',
     fontSize: 12,
     lineHeight: 18,
   },
@@ -663,7 +663,7 @@ const styles = StyleSheet.create({
   },
 
   resumenTitulo: {
-    color: '#00FF88',
+    color: '#61CF5A',
     fontSize: 22,
     fontWeight: '900',
     textAlign: 'center',
@@ -671,7 +671,7 @@ const styles = StyleSheet.create({
   },
 
   resumenSubtitulo: {
-    color: '#819187',
+    color: '#63AD58',
     fontSize: 13,
     textAlign: 'center',
     marginTop: 6,
@@ -695,7 +695,7 @@ const styles = StyleSheet.create({
   },
 
   resumenEtiqueta: {
-    color: '#526158',
+    color: '#50864C',
     fontSize: 9,
     fontWeight: '800',
     letterSpacing: 1.5,

@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
 },
 
 codigo: {
-  color: '#00FF88',
+  color: '#61CF5A',
   fontSize: 16,
   lineHeight: 28,
   letterSpacing: 2,
@@ -92,13 +92,13 @@ codigo: {
   },
 
   logo: {
-    color: '#00FF88',
+    color: '#61CF5A',
     fontSize: 26,
     fontWeight: '900',
   },
 
   subtitulo: {
-    color: '#526158',
+    color: '#50864C',
     fontSize: 11,
     letterSpacing: 3,
     marginTop: 5,
@@ -108,7 +108,7 @@ codigo: {
     alignItems: 'center',
     backgroundColor: '#080D0A',
     borderWidth: 1,
-    borderColor: '#123D29',
+    borderColor: '#3E6A3D',
     borderRadius: 10,
     padding: 25,
   },
@@ -117,15 +117,15 @@ codigo: {
     width: 70,
     height: 70,
     borderRadius: 35,
-    backgroundColor: '#071A10',
+    backgroundColor: '#050805',
     borderWidth: 1,
-    borderColor: '#00FF88',
+    borderColor: '#61CF5A',
     alignItems: 'center',
     justifyContent: 'center',
   },
 
   avatarTexto: {
-    color: '#00FF88',
+    color: '#61CF5A',
     fontSize: 25,
     fontWeight: '900',
   },
@@ -138,7 +138,7 @@ codigo: {
   },
 
   usuario: {
-    color: '#526158',
+    color: '#50864C',
     fontSize: 12,
     marginTop: 4,
   },
@@ -148,7 +148,7 @@ codigo: {
   },
 
   titulo: {
-    color: '#00FF88',
+    color: '#61CF5A',
     fontSize: 11,
     fontWeight: '800',
     letterSpacing: 2,
@@ -160,21 +160,21 @@ codigo: {
     alignItems: 'center',
     backgroundColor: '#080D0A',
     borderWidth: 1,
-    borderColor: '#123D29',
+    borderColor: '#3E6A3D',
     borderRadius: 8,
     padding: 14,
     marginBottom: 8,
   },
 
   numero: {
-    color: '#00FF88',
+    color: '#61CF5A',
     fontSize: 20,
     fontWeight: '900',
     width: 55,
   },
 
   texto: {
-    color: '#A0ADA5',
+    color: '#63AD58',
     fontSize: 12,
     fontWeight: '700',
   },
@@ -182,14 +182,14 @@ codigo: {
   boton: {
     marginTop: 12,
     borderWidth: 1,
-    borderColor: '#123D29',
+    borderColor: '#3E6A3D',
     borderRadius: 8,
     paddingVertical: 14,
     alignItems: 'center',
   },
 
   textoBoton: {
-    color: '#718078',
+    color: '#63AD58',
     fontSize: 12,
     fontWeight: '700',
   },

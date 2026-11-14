@@ -68,7 +68,7 @@ export default function Categoria() {
           onPress={() => router.back()}
           hitSlop={12}
         >
-          <Ionicons name="arrow-back-outline" size={22} color="#00FF88" />
+          <Ionicons name="arrow-back-outline" size={22} color="#61CF5A" />
         </TouchableOpacity>
 
         <View style={styles.headerTexto}>
@@ -78,7 +78,7 @@ export default function Categoria() {
           </Text>
         </View>
 
-        <Ionicons name={info.icono} size={26} color="#00FF88" />
+        <Ionicons name={info.icono} size={26} color="#61CF5A" />
       </View>
 
       <Text style={styles.descripcion}>{info.descripcion}</Text>
@@ -86,7 +86,7 @@ export default function Categoria() {
       <TextInput
         style={styles.buscar}
         placeholder={`Buscar en ${categoria || 'esta categoría'}...`}
-        placeholderTextColor="#526158"
+        placeholderTextColor="#50864C"
         value={consulta}
         onChangeText={setConsulta}
         autoCapitalize="none"
@@ -95,7 +95,7 @@ export default function Categoria() {
       />
 
       {cargando ? (
-        <ActivityIndicator style={styles.cargando} color="#00FF88" size="large" />
+        <ActivityIndicator style={styles.cargando} color="#61CF5A" size="large" />
       ) : (
         <FlatList
           data={resultados}
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: '#123D29',
+    borderColor: '#3E6A3D',
     backgroundColor: '#080D0A',
     alignItems: 'center',
     justifyContent: 'center',
@@ -154,14 +154,14 @@ const styles = StyleSheet.create({
   },
 
   subtitulo: {
-    color: '#526158',
+    color: '#50864C',
     fontSize: 10,
     letterSpacing: 2,
     marginTop: 4,
   },
 
   descripcion: {
-    color: '#819187',
+    color: '#63AD58',
     fontSize: 12,
     lineHeight: 18,
     marginTop: 10,
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     height: 46,
     backgroundColor: '#080D0A',
     borderWidth: 1,
-    borderColor: '#123D29',
+    borderColor: '#3E6A3D',
     borderRadius: 8,
     paddingHorizontal: 14,
     color: '#FFFFFF',
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
   },
 
   vacio: {
-    color: '#526158',
+    color: '#50864C',
     fontSize: 13,
     marginTop: 20,
     lineHeight: 20,

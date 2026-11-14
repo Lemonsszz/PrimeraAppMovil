@@ -183,7 +183,7 @@ export default function Login() {
         <TextInput
           style={styles.input}
           placeholder="operator@cybervault.com"
-          placeholderTextColor="#526158"
+          placeholderTextColor="#50864C"
           value={correo}
           onChangeText={setCorreo}
           keyboardType="email-address"
@@ -200,7 +200,7 @@ export default function Login() {
         <TextInput
           style={styles.input}
           placeholder="••••••••••••"
-          placeholderTextColor="#526158"
+          placeholderTextColor="#50864C"
           value={contraseña}
           onChangeText={setContraseña}
           secureTextEntry
@@ -290,7 +290,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 40,
     left: 15,
-    color: '#123D29',
+    color: '#3B4B33',
     fontSize: 12,
     opacity: 0.7,
   },
@@ -299,7 +299,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 45,
     right: 15,
-    color: '#123D29',
+    color: '#3B4B33',
     fontSize: 10,
     opacity: 0.7,
   },
@@ -313,14 +313,14 @@ const styles = StyleSheet.create({
   },
 
   logo: {
-    color: '#00FF88',
+    color: '#61CF5A',
     fontSize: 32,
     fontWeight: 'bold',
     letterSpacing: 2,
   },
 
   version: {
-    color: '#526158',
+    color: '#50864C',
     fontSize: 10,
     marginTop: 5,
     letterSpacing: 2,
@@ -334,7 +334,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderTopWidth: 1,
     borderBottomWidth: 1,
-    borderColor: '#123D29',
+    borderColor: '#3B4B33',
     paddingVertical: 9,
     marginBottom: 20,
   },
@@ -343,19 +343,19 @@ const styles = StyleSheet.create({
     width: 7,
     height: 7,
     borderRadius: 10,
-    backgroundColor: '#00FF88',
+    backgroundColor: '#61CF5A',
     marginRight: 8,
   },
 
   estadoTexto: {
-    color: '#00FF88',
+    color: '#61CF5A',
     fontSize: 11,
     fontWeight: 'bold',
     flex: 1,
   },
 
   versionTexto: {
-    color: '#526158',
+    color: '#50864C',
     fontSize: 10,
   },
 
@@ -365,20 +365,20 @@ const styles = StyleSheet.create({
   panel: {
     backgroundColor: '#080D0A',
     borderWidth: 1,
-    borderColor: '#123D29',
+    borderColor: '#3B4B33',
     padding: 20,
     borderRadius: 4,
   },
 
   titulo: {
-    color: '#00FF88',
+    color: '#61CF5A',
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 5,
   },
 
   subtitulo: {
-    color: '#526158',
+    color: '#50864C',
     fontSize: 10,
     marginBottom: 25,
     letterSpacing: 1,
@@ -388,7 +388,7 @@ const styles = StyleSheet.create({
   /* INPUTS */
 
   label: {
-    color: '#718078',
+    color: '#63AD58',
     fontSize: 11,
     marginBottom: 7,
     fontWeight: 'bold',
@@ -397,9 +397,9 @@ const styles = StyleSheet.create({
   input: {
     height: 48,
     borderWidth: 1,
-    borderColor: '#123D29',
+    borderColor: '#3B4B33',
     backgroundColor: '#050805',
-    color: '#00FF88',
+    color: '#61CF5A',
     paddingHorizontal: 14,
     marginBottom: 18,
     borderRadius: 3,
@@ -411,7 +411,7 @@ const styles = StyleSheet.create({
 
   botonLogin: {
     height: 48,
-    backgroundColor: '#00FF88',
+    backgroundColor: '#61CF5A',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 3,
@@ -431,7 +431,7 @@ const styles = StyleSheet.create({
   botonCrear: {
     height: 45,
     borderWidth: 1,
-    borderColor: '#123D29',
+    borderColor: '#3B4B33',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 3,
@@ -439,7 +439,7 @@ const styles = StyleSheet.create({
   },
 
   textoCrear: {
-    color: '#00FF88',
+    color: '#61CF5A',
     fontWeight: 'bold',
     fontSize: 12,
     letterSpacing: 1,
@@ -451,7 +451,7 @@ const styles = StyleSheet.create({
   },
 
   textoInvitado: {
-    color: '#526158',
+    color: '#50864C',
     fontSize: 11,
     letterSpacing: 1,
   },
@@ -465,7 +465,7 @@ const styles = StyleSheet.create({
   },
 
   footerTexto: {
-    color: '#526158',
+    color: '#50864C',
     fontSize: 9,
     marginVertical: 2,
     letterSpacing: 1,

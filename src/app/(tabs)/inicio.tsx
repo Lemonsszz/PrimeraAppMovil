@@ -106,7 +106,7 @@ export default function Inicio() {
               <Ionicons
                 name={acceso.icono}
                 size={24}
-                color="#00FF88"
+                color="#61CF5A"
                 style={styles.accesoIcono}
               />
               <Text style={styles.accesoTitulo}>{acceso.titulo}</Text>
@@ -116,7 +116,7 @@ export default function Inicio() {
         </View>
 
         <View style={styles.tip}>
-          <Ionicons name="terminal-outline" size={14} color="#526158" />
+          <Ionicons name="terminal-outline" size={14} color="#50864C" />
           <Text style={styles.tipTexto}>
             Consejo: usa la pestaña Buscar para encontrar cualquier técnica por
             nombre, categoría o etiqueta.
@@ -143,14 +143,14 @@ const styles = StyleSheet.create({
   },
 
   logo: {
-    color: '#00FF88',
+    color: '#61CF5A',
     fontSize: 27,
     fontWeight: '900',
     letterSpacing: 1,
   },
 
   subtitulo: {
-    color: '#5C7568',
+    color: '#50864C',
     fontSize: 11,
     fontWeight: '600',
     letterSpacing: 3,
@@ -160,13 +160,13 @@ const styles = StyleSheet.create({
   hero: {
     backgroundColor: '#080D0A',
     borderWidth: 1,
-    borderColor: '#123D29',
+    borderColor: '#3E6A3D',
     borderRadius: 12,
     padding: 18,
   },
 
   heroEtiqueta: {
-    color: '#00FF88',
+    color: '#61CF5A',
     fontSize: 10,
     fontWeight: '800',
     letterSpacing: 2,
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
   },
 
   heroTexto: {
-    color: '#819187',
+    color: '#63AD58',
     fontSize: 13,
     lineHeight: 20,
     marginTop: 10,
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 14,
-    backgroundColor: '#00FF88',
+    backgroundColor: '#61CF5A',
     borderRadius: 12,
     padding: 16,
     marginTop: 16,
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
   },
 
   retoEtiqueta: {
-    color: '#053B22',
+    color: '#050805',
     fontSize: 9,
     fontWeight: '900',
     letterSpacing: 2,
@@ -225,13 +225,13 @@ const styles = StyleSheet.create({
   },
 
   retoDetalle: {
-    color: '#054027',
+    color: '#3B4B33',
     fontSize: 11,
     marginTop: 2,
   },
 
   seccion: {
-    color: '#526158',
+    color: '#50864C',
     fontSize: 10,
     fontWeight: '800',
     letterSpacing: 3,
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     backgroundColor: '#080D0A',
     borderWidth: 1,
-    borderColor: '#123D29',
+    borderColor: '#3E6A3D',
     borderRadius: 10,
     padding: 14,
   },
@@ -267,7 +267,7 @@ const styles = StyleSheet.create({
   },
 
   accesoDetalle: {
-    color: '#718078',
+    color: '#63AD58',
     fontSize: 11,
     marginTop: 4,
     lineHeight: 15,
@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
   },
 
   tipTexto: {
-    color: '#526158',
+    color: '#50864C',
     fontSize: 11,
     lineHeight: 16,
     flex: 1,

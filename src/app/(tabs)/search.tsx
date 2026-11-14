@@ -59,7 +59,7 @@ export default function Buscar() {
       <TextInput
         style={styles.buscar}
         placeholder="Escribe un comando, categoría o etiqueta..."
-        placeholderTextColor="#526158"
+        placeholderTextColor="#50864C"
         value={consulta}
         onChangeText={setConsulta}
         autoCapitalize="none"
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
   },
 
   codigo: {
-    color: '#00FF88',
+    color: '#61CF5A',
     fontSize: 14,
     lineHeight: 26,
     letterSpacing: 2,
@@ -129,13 +129,13 @@ const styles = StyleSheet.create({
   },
 
   logo: {
-    color: '#00FF88',
+    color: '#61CF5A',
     fontSize: 26,
     fontWeight: '900',
   },
 
   subtitulo: {
-    color: '#526158',
+    color: '#50864C',
     fontSize: 11,
     letterSpacing: 3,
     marginTop: 5,
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     height: 50,
     backgroundColor: '#080D0A',
     borderWidth: 1,
-    borderColor: '#123D29',
+    borderColor: '#3E6A3D',
     borderRadius: 8,
     paddingHorizontal: 15,
     color: '#FFFFFF',
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
   },
 
   resultados: {
-    color: '#00FF88',
+    color: '#61CF5A',
     fontSize: 11,
     fontWeight: '800',
     letterSpacing: 2,
@@ -168,14 +168,14 @@ const styles = StyleSheet.create({
   comando: {
     backgroundColor: '#080D0A',
     borderWidth: 1,
-    borderColor: '#123D29',
+    borderColor: '#3E6A3D',
     borderRadius: 8,
     padding: 15,
     marginBottom: 10,
   },
 
   categoria: {
-    color: '#00FF88',
+    color: '#61CF5A',
     fontSize: 10,
     fontWeight: '800',
     letterSpacing: 1.5,
@@ -189,14 +189,14 @@ const styles = StyleSheet.create({
   },
 
   descripcion: {
-    color: '#718078',
+    color: '#63AD58',
     fontSize: 12,
     marginTop: 5,
     lineHeight: 17,
   },
 
   vacio: {
-    color: '#526158',
+    color: '#50864C',
     fontSize: 13,
     marginTop: 10,
   },
