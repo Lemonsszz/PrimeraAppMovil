@@ -45,6 +45,9 @@ npx expo start            # desarrollo (Expo Go / dev build)
 npx expo start --android  # abrir en emulador Android
 npx tsc --noEmit          # verificación de tipos
 npx eas build -p android --profile preview   # genera APK
+
+node scripts/migrar-contenidos.mjs   # migrar/actualizar datos a `contenidos`
+node scripts/reglas-firebase.mjs     # añadir reglas de `contenidos` en Firebase
 ```
 
 ---
@@ -54,10 +57,11 @@ npx eas build -p android --profile preview   # genera APK
 | Área | Estado |
 | --- | --- |
 | Login / registro con Firebase Auth | ✅ Funciona |
-| Lectura de comandos (Realtime DB) | ✅ Funciona |
+| Modelo unificado `contenidos` | ✅ Migrado y normalizado (2026-11-14) |
+| Lectura de contenidos (Realtime DB) | ✅ Funciona |
 | Notificaciones locales y tokens | ✅ Funciona |
 | Navegación por pestañas | ✅ Funciona |
-| Búsqueda real de comandos | 🟡 UI lista, falta lógica |
+| Búsqueda real (título, resumen, categoría, tags) | ✅ Funciona |
 | Crear / editar / borrar comandos | ⛔ No existe |
 | Favoritos / perfil real | ⛔ Maqueta |
 | Persistencia de sesión / logout | ⛔ No existe |
@@ -92,13 +96,13 @@ npx eas build -p android --profile preview   # genera APK
 
 ### Fase 1 — Funcionalidad core del santuario (🔜 siguiente)
 
-- [ ] **Modelo de datos unificado** (`contenidos`) con tipos: comando, estrategia, payload, herramienta y cheatsheet.
-- [ ] Migrar los comandos actuales a la nueva estructura (sin perder datos).
+- [x] **Modelo de datos unificado** (`contenidos`) con tipos: comando, estrategia, payload, herramienta y cheatsheet.
+- [x] Migrar los comandos actuales a la nueva estructura (sin perder datos; `Comandos` queda de respaldo).
 - [ ] Pantalla de detalle `/contenido/[id]`: comando completo, explicación, plataforma, ejemplo, referencias y pasos (si es estrategia).
 - [ ] Botón **copiar al portapapeles** (`expo-clipboard`).
 - [ ] Crear contenido desde Inicio (el botón hoy no hace nada).
 - [ ] Editar y eliminar contenido.
-- [ ] **Búsqueda real en vivo** sobre título, resumen, categoría, plataforma y etiquetas.
+- [x] **Búsqueda real en vivo** sobre título, resumen, categoría, plataforma y etiquetas.
 - [ ] Filtros: tipo (comando/estrategia), categoría, plataforma y dificultad.
 - [ ] Favoritos (`favoritos/{uid}/{id}`).
 - [ ] Estados de UI: cargando, vacío, error y reintento.
@@ -152,10 +156,11 @@ npx eas build -p android --profile preview   # genera APK
 - [ ] Bloqueo con biometría (`expo-local-authentication`).
 - [ ] i18n (es/en).
 
-### Modelo de datos propuesto (⏳ pendiente de aprobación)
+### Modelo de datos aplicado (✅ 2026-11-14)
 
 Nodo unificado `contenidos` para que una sola búsqueda cubra comandos y
-estrategias:
+estrategias. Ya está en producción: los 6 comandos originales se migraron y el
+nodo `Comandos` se conserva como respaldo. Script: `node scripts/migrar-contenidos.mjs`.
 
 ```json
 {
@@ -197,19 +202,19 @@ estrategias:
 Otros nodos previstos: `favoritos/{uid}/{id}`, `notas/{uid}/{id}`,
 `tokens/{uid}/{instalacion}` y `usuarios/{uid}`.
 
-**Problemas detectados en los datos actuales** (nodo `Comandos`):
+**Problemas corregidos en la migración** (nodo antiguo `Comandos`):
 
-| ID | Problema |
-| --- | --- |
-| C002 | Campo `descripción` (con tilde) → la app lo muestra como `undefined` |
-| C003 | Campo `descripción` (con tilde) → `undefined` |
-| C004 | Campo `categeoria` (mal escrito) → categoría `undefined` |
-| C005 | Campo `descripcio` (mal escrito) → descripción `undefined` |
-| C0006 | Categoría `KALI` no existe en las categorías de la app |
-| C004 | `nmap -p 192.168.#.#` no es una sintaxis válida de nmap |
+| ID | Problema | Estado |
+| --- | --- | --- |
+| C002 | Campo `descripción` (con tilde) → la app lo mostraba como `undefined` | ✅ corregido |
+| C003 | Campo `descripción` (con tilde) → `undefined` | ✅ corregido |
+| C004 | Campo `categeoria` (mal escrito) → categoría `undefined` | ✅ corregido |
+| C005 | Campo `descripcio` (mal escrito) → descripción `undefined` | ✅ corregido |
+| C0006 | Categoría `KALI` (distro, no categoría) | ✅ pasó a `SECURITY` con tag `kali` |
+| C004 | `nmap -p 192.168.#.#` no era una sintaxis válida de nmap | ✅ ahora `nmap -p 22,80,443 192.168.1.10` |
 
-Además, a todos les falta: comando ejecutable separado del nombre, plataforma,
-dificultad, etiquetas y ejemplo.
+Además, a todos se les añadió: comando ejecutable separado del nombre, plataforma,
+dificultad, etiquetas, ejemplo y advertencia cuando aplica.
 
 ---
 
@@ -234,6 +239,7 @@ dificultad, etiquetas y ejemplo.
 | --- | --- |
 | 2026-11-14 | Fase 0: git recuperado (`main` con la versión final), crash de Buscar corregido, safe area en todas las pantallas, handler de push global, limpieza y verificación de tipos. |
 | 2026-11-14 | Reglas de Firebase aplicadas y verificadas (raíz y `Usuarios` en 401, `Comandos` público para invitado). Detectados 4 campos mal escritos en la base y propuesto el modelo `contenidos`. |
+| 2026-11-14 | Migración a `contenidos`: 6 comandos normalizados (typos, sintaxis de nmap, plataforma, dificultad, tags, riesgo). Regla pública de `contenidos` publicada. App leyendo `contenidos` y búsqueda real funcionando. |
 
 ---
 
@@ -250,4 +256,6 @@ dificultad, etiquetas y ejemplo.
   y compilar el APK con EAS solo cuando la funcionalidad esté cerrada.
 - En Expo Go **no** funcionan los push remotos de Android (es una limitación de
   Expo Go, no un fallo de la app); las notificaciones locales sí funcionan.
+- El nodo `Comandos` se conserva como respaldo de la migración. Se puede borrar
+  cuando la app lleve un tiempo funcionando con `contenidos`.
 
