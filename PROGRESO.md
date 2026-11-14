@@ -106,8 +106,8 @@ node scripts/reglas-firebase.mjs     # publicar reglas (contenidos, retos, progr
 - [x] Migrar los comandos actuales a la nueva estructura (sin perder datos; `Comandos` queda de respaldo).
 - [x] Pantalla de detalle `/contenido/[id]`: comando completo, explicación, plataforma, ejemplo, referencias y pasos (si es estrategia).
 - [x] Botón **copiar al portapapeles** (`expo-clipboard`) en comando, ejemplo y cada paso.
-- [ ] Crear contenido desde la app (hoy se carga con scripts).
-- [ ] Editar y eliminar contenido.
+- [x] Crear contenido desde la app (formulario con validación; requiere sesión).
+- [x] Editar y eliminar contenido (desde el detalle, con confirmación).
 - [x] **Búsqueda real en vivo** sobre título, resumen, categoría, plataforma y etiquetas.
 - [x] **Ampliación del banco de contenidos**: 51 entradas nuevas + Hydra actualizado
       (57 en total) en 10 categorías: LINUX, WINDOWS, NETWORKING, SECURITY, RECON,
@@ -313,6 +313,7 @@ dificultad, etiquetas, ejemplo y advertencia cuando aplica.
 | 2026-11-14 | Paleta verde bosque aplicada en Inicio, Comandos, Retos, Buscar, Perfil, detalle de categoría y login. Push queda intacto; rojo de error y ámbar de advertencia se mantienen por semántica. |
 | 2026-11-14 | Importados 51 contenidos nuevos y actualizado Hydra: 57 contenidos en 10 categorías. Se corrigieron placeholders perdidos al pegar (`<IP>`, `<WORDLIST>`, etc.) y dos títulos inexactos (Gobuster y Curl). |
 | 2026-11-14 | Pantalla de detalle `/contenido/[id]` con metadatos, pasos de estrategia, nota y referencias. Copiado al portapapeles (`expo-clipboard`) en comando, ejemplo y pasos. Las tarjetas de categoría y los resultados de búsqueda ahora abren el detalle. |
+| 2026-11-14 | CRUD de contenidos: formulario `/contenido/editar` (crear y editar, con pasos para estrategias) y eliminación con confirmación desde el detalle. Botón `+` en Comandos. Escrituras solo con sesión iniciada (regla `auth != null`). |
 
 ---
 

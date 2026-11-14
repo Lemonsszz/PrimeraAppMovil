@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   FlatList,
   StatusBar,
   StyleSheet,
@@ -13,6 +14,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { infoCategoria } from '../../constants/categorias';
+import { useUsuario } from '../../services/auth';
 import { subscribeContenidos } from '../../services/contenidos';
 import type { Contenido } from '../../types/contenido';
 
@@ -24,6 +26,7 @@ type GrupoCategoria = {
 export default function Comandos() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const { uid } = useUsuario();
   const [contenidos, setContenidos] = useState<Contenido[]>([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -58,17 +61,48 @@ export default function Comandos() {
     router.push(`/categoria/${encodeURIComponent(categoria)}` as never);
   };
 
+  const abrirNuevo = () => {
+    if (!uid) {
+      Alert.alert(
+        'Sesión requerida',
+        'Inicia sesión para crear contenido.',
+        [
+          { text: 'Cancelar', style: 'cancel' },
+          {
+            text: 'Iniciar sesión',
+            onPress: () => router.push('/login' as never),
+          },
+        ]
+      );
+      return;
+    }
+
+    router.push('/contenido/editar' as never);
+  };
+
   return (
     <View style={[styles.contenedor, { paddingTop: insets.top + 16 }]}>
       <StatusBar barStyle="light-content" />
 
       <View style={styles.header}>
-        <Text style={styles.logo}>$ CATEGORIES_</Text>
-        <Text style={styles.subtitulo}>
-          {cargando
-            ? 'CARGANDO...'
-            : `${categorias.length} CATEGORÍAS · ${contenidos.length} CONTENIDOS`}
-        </Text>
+        <View style={styles.headerTexto}>
+          <Text style={styles.logo}>$ CATEGORIES_</Text>
+          <Text style={styles.subtitulo}>
+            {cargando
+              ? 'CARGANDO...'
+              : `${categorias.length} CATEGORÍAS · ${contenidos.length} CONTENIDOS`}
+          </Text>
+        </View>
+
+        <TouchableOpacity
+          style={styles.agregar}
+          onPress={abrirNuevo}
+          activeOpacity={0.85}
+          accessibilityRole="button"
+          accessibilityLabel="Nuevo contenido"
+        >
+          <Ionicons name="add-outline" size={24} color="#050805" />
+        </TouchableOpacity>
       </View>
 
       {cargando ? (
@@ -131,7 +165,23 @@ const styles = StyleSheet.create({
   },
 
   header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
     marginBottom: 20,
+  },
+
+  headerTexto: {
+    flex: 1,
+  },
+
+  agregar: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: '#61CF5A',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   logo: {
