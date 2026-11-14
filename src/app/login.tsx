@@ -16,6 +16,7 @@ import {
 } from 'firebase/auth';
 
 import { auth } from '../firebaseconfig';
+import { guardarPerfil } from '../services/perfil';
 
 import { router } from 'expo-router';
 
@@ -71,6 +72,14 @@ export default function Login() {
       );
 
       console.log('✅ CUENTA CREADA:', usuario.user.email);
+
+      // Crea el perfil en `Usuarios/{uid}` con un nombre inicial. Si falla la
+      // escritura (red o reglas), la cuenta ya existe y se puede seguir igual.
+      try {
+        await guardarPerfil(usuario.user.uid, correo.split('@')[0] ?? 'Operador');
+      } catch (e) {
+        console.log('⚠️ No se pudo crear el perfil inicial:', e);
+      }
 
       Alert.alert(
         'ACCESS GRANTED',
