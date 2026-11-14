@@ -5,11 +5,13 @@ import {
   TouchableOpacity,
   StatusBar,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function Perfil() {
+  const insets = useSafeAreaInsets();
+
   return (
-    
-    <View style={styles.contenedor}>
+    <View style={[styles.contenedor, { paddingTop: insets.top + 16 }]}>
       <View style={styles.codigoFondo}>
   <Text style={styles.codigo}>
     0x4F2A   0x00FF   0x91C7{'\n'}

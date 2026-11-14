@@ -8,14 +8,15 @@ import {
 } from 'react-native';
 
 import { Ionicons } from '@expo/vector-icons';
-import { Card, Button } from 'react-native-paper';
+import { Card } from 'react-native-paper';
 import { useState, useEffect } from 'react';
 import { ref, onValue } from 'firebase/database';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import { database } from '../../firebaseconfig';
 
 export default function Comandos() {
-  console.log('🔥 ENTRE A COMANDOS');
-
+  const insets = useSafeAreaInsets();
   const [comandos, setComandos] = useState<any[]>([]);
 
   useEffect(() => {
@@ -23,8 +24,6 @@ export default function Comandos() {
 
     const escucharComandos = onValue(comandosObtener, (snapshot) => {
       const datos = snapshot.val();
-
-      console.log('DATOS FIREBASE:', datos);
 
       if (datos) {
         const listaComandos = Object.keys(datos).map((id) => ({
@@ -44,7 +43,7 @@ export default function Comandos() {
   }, []);
 
   return (
-    <View style={styles.contenedor}>
+    <View style={[styles.contenedor, { paddingTop: insets.top + 16 }]}>
       <StatusBar barStyle="light-content" />
 
       <View style={styles.header}>

@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import {
   ensureNotificationPermissionsAsync,
@@ -22,6 +23,7 @@ import {
 type Estado = 'cargando' | 'listo' | 'error';
 
 export default function Notificaciones() {
+  const insets = useSafeAreaInsets();
   const [estado, setEstado] = useState<Estado>('cargando');
   const [permiso, setPermiso] = useState(false);
   const [expoToken, setExpoToken] = useState<string | null>(null);
@@ -85,7 +87,10 @@ export default function Notificaciones() {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.contenido}
+        contentContainerStyle={[
+          styles.contenido,
+          { paddingTop: insets.top + 16 },
+        ]}
       >
         <View style={styles.header}>
           <Text style={styles.logo}>$ PUSH_NOTIFICATIONS_</Text>

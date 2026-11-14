@@ -6,10 +6,13 @@ import {
   StatusBar,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function Categorias() {
+  const insets = useSafeAreaInsets();
+
   return (
-    <View style={styles.contenedor}>
+    <View style={[styles.contenedor, { paddingTop: insets.top + 16 }]}>
       <StatusBar barStyle="light-content" />
 
       <View style={styles.header}>
