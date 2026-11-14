@@ -104,8 +104,8 @@ node scripts/reglas-firebase.mjs     # publicar reglas (contenidos, retos, progr
 
 - [x] **Modelo de datos unificado** (`contenidos`) con tipos: comando, estrategia, payload, herramienta y cheatsheet.
 - [x] Migrar los comandos actuales a la nueva estructura (sin perder datos; `Comandos` queda de respaldo).
-- [ ] Pantalla de detalle `/contenido/[id]`: comando completo, explicación, plataforma, ejemplo, referencias y pasos (si es estrategia).
-- [ ] Botón **copiar al portapapeles** (`expo-clipboard`).
+- [x] Pantalla de detalle `/contenido/[id]`: comando completo, explicación, plataforma, ejemplo, referencias y pasos (si es estrategia).
+- [x] Botón **copiar al portapapeles** (`expo-clipboard`) en comando, ejemplo y cada paso.
 - [ ] Crear contenido desde la app (hoy se carga con scripts).
 - [ ] Editar y eliminar contenido.
 - [x] **Búsqueda real en vivo** sobre título, resumen, categoría, plataforma y etiquetas.
@@ -114,6 +114,7 @@ node scripts/reglas-firebase.mjs     # publicar reglas (contenidos, retos, progr
       WEB, ACTIVE_DIRECTORY, PRIVESC, CRYPTO, FORENSE y CLOUD.
 - [x] **Comandos organizados por tarjetas de categoría** con contador y descripción.
 - [x] **Pantalla de categoría** (`/categoria/[categoria]`) con su propio buscador.
+- [x] **Resultados de búsqueda y tarjetas abren el detalle** del contenido.
 - [x] **Inicio introductorio** con accesos directos a las demás pestañas y CTA del reto diario (sustituye a "AGREGAR COMANDO").
 - [ ] Filtros: tipo (comando/estrategia), plataforma y dificultad.
 - [ ] Favoritos (`favoritos/{uid}/{id}`).
@@ -311,6 +312,7 @@ dificultad, etiquetas, ejemplo y advertencia cuando aplica.
 | 2026-11-14 | Reto diario: 31 preguntas cargadas en `retos`, reglas de `retos` y `progreso/$uid` publicadas, pestaña Retos sustituye a Notas, inicio introductorio, comandos por categorías con buscador propio. |
 | 2026-11-14 | Paleta verde bosque aplicada en Inicio, Comandos, Retos, Buscar, Perfil, detalle de categoría y login. Push queda intacto; rojo de error y ámbar de advertencia se mantienen por semántica. |
 | 2026-11-14 | Importados 51 contenidos nuevos y actualizado Hydra: 57 contenidos en 10 categorías. Se corrigieron placeholders perdidos al pegar (`<IP>`, `<WORDLIST>`, etc.) y dos títulos inexactos (Gobuster y Curl). |
+| 2026-11-14 | Pantalla de detalle `/contenido/[id]` con metadatos, pasos de estrategia, nota y referencias. Copiado al portapapeles (`expo-clipboard`) en comando, ejemplo y pasos. Las tarjetas de categoría y los resultados de búsqueda ahora abren el detalle. |
 
 ---
 

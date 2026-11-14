@@ -1,18 +1,24 @@
 import { Ionicons } from '@expo/vector-icons';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Card } from 'react-native-paper';
 
 import type { Contenido } from '../types/contenido';
 
 /** Tarjeta reutilizable para mostrar un comando/estrategia del santuario. */
-export function ContenidoCard({ contenido }: { contenido: Contenido }) {
+export function ContenidoCard({
+  contenido,
+  onPress,
+}: {
+  contenido: Contenido;
+  onPress?: () => void;
+}) {
   const etiquetas = [
     ...contenido.plataformas,
     ...(contenido.dificultad ? [contenido.dificultad] : []),
     ...contenido.tags,
   ];
 
-  return (
+  const tarjeta = (
     <Card style={styles.tarjeta}>
       <Card.Content>
         <Text style={styles.categoria}>
@@ -51,6 +57,19 @@ export function ContenidoCard({ contenido }: { contenido: Contenido }) {
         </Card.Content>
       ) : null}
     </Card>
+  );
+
+  if (!onPress) return tarjeta;
+
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={0.85}
+      accessibilityRole="button"
+      accessibilityLabel={`Abrir ${contenido.titulo}`}
+    >
+      {tarjeta}
+    </TouchableOpacity>
   );
 }
 

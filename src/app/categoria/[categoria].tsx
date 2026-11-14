@@ -103,7 +103,12 @@ export default function Categoria() {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
           contentContainerStyle={styles.lista}
-          renderItem={({ item }) => <ContenidoCard contenido={item} />}
+          renderItem={({ item }) => (
+            <ContenidoCard
+              contenido={item}
+              onPress={() => router.push(`/contenido/${item.id}` as never)}
+            />
+          )}
           ListEmptyComponent={
             <Text style={styles.vacio}>
               {error ??

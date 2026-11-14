@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import {
   FlatList,
@@ -9,6 +10,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { ContenidoCard } from '../../components/contenido-card';
 import { filtrarContenidos, subscribeContenidos } from '../../services/contenidos';
 import type { Contenido } from '../../types/contenido';
 
@@ -23,6 +25,7 @@ const CODIGO_FONDO = [
 
 export default function Buscar() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const [consulta, setConsulta] = useState('');
   const [contenidos, setContenidos] = useState<Contenido[]>([]);
   const [cargando, setCargando] = useState(true);
@@ -80,15 +83,10 @@ export default function Buscar() {
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={styles.lista}
         renderItem={({ item }) => (
-          <View style={styles.comando}>
-            <Text style={styles.categoria}>
-              {item.categoria} · {item.tipo.toUpperCase()}
-            </Text>
-            <Text style={styles.nombre}>{item.titulo}</Text>
-            {item.resumen ? (
-              <Text style={styles.descripcion}>{item.resumen}</Text>
-            ) : null}
-          </View>
+          <ContenidoCard
+            contenido={item}
+            onPress={() => router.push(`/contenido/${item.id}` as never)}
+          />
         )}
         ListEmptyComponent={
           cargando ? null : (
@@ -163,36 +161,6 @@ const styles = StyleSheet.create({
 
   lista: {
     paddingBottom: 30,
-  },
-
-  comando: {
-    backgroundColor: '#080D0A',
-    borderWidth: 1,
-    borderColor: '#3E6A3D',
-    borderRadius: 8,
-    padding: 15,
-    marginBottom: 10,
-  },
-
-  categoria: {
-    color: '#61CF5A',
-    fontSize: 10,
-    fontWeight: '800',
-    letterSpacing: 1.5,
-    marginBottom: 6,
-  },
-
-  nombre: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '700',
-  },
-
-  descripcion: {
-    color: '#63AD58',
-    fontSize: 12,
-    marginTop: 5,
-    lineHeight: 17,
   },
 
   vacio: {
