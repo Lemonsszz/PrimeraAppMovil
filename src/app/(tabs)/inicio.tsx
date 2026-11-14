@@ -79,7 +79,7 @@ export default function Inicio() {
           onPress={() => router.push('/retos')}
         >
           <View style={styles.retoIcono}>
-            <Ionicons name="trophy-outline" size={26} color="#050805" />
+            <Ionicons name="trophy-outline" size={26} color="#61CF5A" />
           </View>
 
           <View style={styles.retoTexto}>
@@ -90,7 +90,7 @@ export default function Inicio() {
             </Text>
           </View>
 
-          <Ionicons name="arrow-forward-outline" size={20} color="#050805" />
+          <Ionicons name="arrow-forward-outline" size={20} color="#61CF5A" />
         </TouchableOpacity>
 
         <Text style={styles.seccion}>EXPLORAR</Text>
@@ -191,7 +191,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 14,
-    backgroundColor: '#61CF5A',
+    backgroundColor: '#3B4B33',
+    borderWidth: 1,
+    borderColor: '#3E6A3D',
     borderRadius: 12,
     padding: 16,
     marginTop: 16,
@@ -211,21 +213,21 @@ const styles = StyleSheet.create({
   },
 
   retoEtiqueta: {
-    color: '#050805',
+    color: '#61CF5A',
     fontSize: 9,
     fontWeight: '900',
     letterSpacing: 2,
   },
 
   retoTitulo: {
-    color: '#050805',
+    color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '900',
     marginTop: 2,
   },
 
   retoDetalle: {
-    color: '#3B4B33',
+    color: '#61CF5A',
     fontSize: 11,
     marginTop: 2,
   },
