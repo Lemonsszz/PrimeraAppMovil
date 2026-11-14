@@ -35,7 +35,11 @@ Se corrigió así:
 | `app.json` → `android.package` + `googleServicesFile` | ✅ |
 | Plugin `expo-notifications` en `app.json` | ✅ |
 | `eas.json` con perfil `preview` que genera **APK** | ✅ |
-| Pantalla **Notificaciones** con tokens y botón de prueba | ✅ `src/app/notificaciones.tsx` |
+| Pantalla **Notificaciones** con tokens y botón de prueba | ✅ `src/app/(tabs)/notificaciones.tsx` |
+| Guardado automático del token en `tokens/{uid}` | ✅ Al iniciar sesión (regla solo para el dueño) |
+| Apertura de pantalla al tocar la notificación (`data.url`) | ✅ `src/app/_layout.tsx` |
+| Recordatorio diario del reto (19:00, local) | ✅ Interruptor en la pestaña Push |
+| Envío real desde el proyecto (Expo Push + FCM V1) | ✅ `scripts/enviar-push.mjs` |
 | Dependencias `expo-notifications`, `expo-constants`, `firebase` | ✅ declaradas en `package.json` |
 
 > ⚠️ `google-service-account.json` contiene una **clave privada**. Ya está en
@@ -154,6 +158,35 @@ Invoke-RestMethod -Uri "https://exp.host/--/api/v2/push/send" `
 Si responde `{"data":{"status":"ok"}}` el envío salió. Si responde
 `DeviceNotRegistered` el token cambió (vuelve a abrir la app y copia el nuevo).
 
+### Nivel 5 — Push desde el propio proyecto (recomendado)
+
+Con la app abierta y sesión iniciada, el token se guarda solo en
+`tokens/{uid}`. Desde la raíz del proyecto:
+
+```powershell
+# A todos los dispositivos registrados
+npm run push:enviar -- --titulo "Nuevo contenido" --cuerpo "Se añadió una estrategia de Active Directory" --url "/comandos"
+
+# A un usuario concreto (su UID de Firebase Auth)
+npm run push:enviar -- --uid TU_UID --titulo "Hola" --cuerpo "Prueba directa"
+
+# Recordatorio del reto diario
+npm run push:recordatorio
+
+# Ver qué se enviaría, sin enviar
+npm run push:enviar -- --recordatorio --dry
+
+# Enviar y borrar tokens que el servicio marque como inválidos
+npm run push:enviar -- --recordatorio --limpiar
+```
+
+El script usa `google-service-account.json` (admin). Si el usuario tiene
+`expoPushToken` envía por el servicio de Expo; si solo tiene `fcmToken`, envía
+por **FCM V1** directamente.
+
+También puedes elegir el recordatorio desde la pestaña **Push**:
+**ACTIVAR (19:00)** programa una notificación local diaria que abre `/retos`.
+
 ---
 
 ## 4. Problemas típicos
@@ -170,6 +203,10 @@ Si responde `{"data":{"status":"ok"}}` el envío salió. Si responde
 
 ## 5. Checklist de entrega
 
+- [x] Reglas de `tokens/{uid}` publicadas (solo el dueño escribe su token)
+- [x] Envío real desde el proyecto (`scripts/enviar-push.mjs`)
+- [x] Recordatorio diario del reto (local, 19:00)
+- [x] Abrir `/retos` o un contenido al tocar la notificación
 - [ ] `npx eas init` hecho (`extra.eas.projectId` en `app.json`)
 - [ ] Clave FCM V1 subida con `eas credentials`
 - [ ] `npx eas build -p android --profile preview` terminado

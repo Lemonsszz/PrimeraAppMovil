@@ -62,6 +62,7 @@ node scripts/reglas-firebase.mjs     # publicar reglas (contenidos, retos, progr
 | Modelo unificado `contenidos` | ✅ 57 contenidos en 10 categorías (2026-11-14) |
 | Lectura de contenidos (Realtime DB) | ✅ Funciona |
 | Notificaciones locales y tokens | ✅ Funciona |
+| Push real (token por usuario + envío por script) | ✅ Implementado, falta probarlo en el APK |
 | Navegación por pestañas | ✅ Funciona (Inicio, Push, Comandos, Retos, Buscar, Perfil) |
 | Búsqueda real (título, resumen, categoría, tags) | ✅ Funciona |
 | Inicio introductorio con accesos directos | ✅ Funciona |
@@ -151,11 +152,13 @@ node scripts/reglas-firebase.mjs     # publicar reglas (contenidos, retos, progr
 
 ### Fase 3 — Push de verdad
 
-- [ ] Guardar tokens en la base (`tokens/{uid}`) al iniciar sesión.
-- [ ] Enviar push a un usuario concreto (script o Cloud Function).
-- [ ] Abrir el comando al tocar la notificación (deep link con Expo Router).
-- [ ] Notificación al publicar un comando nuevo.
-- [ ] Canal/tema por categoría y recordatorio programado.
+- [x] Guardar tokens en la base (`tokens/{uid}`) al iniciar sesión (automático y con botón de recarga; regla solo para el dueño).
+- [x] Enviar push a un usuario concreto o a todos con `scripts/enviar-push.mjs` (Expo Push y FCM V1 directo).
+- [x] Abrir el comando, el reto o la pantalla indicada al tocar la notificación (`data.url` + Expo Router).
+- [x] Recordatorio diario del reto programado desde la app (19:00, notificación local) y modo `--recordatorio` por script.
+- [x] Notificación al publicar un comando nuevo (modo manual con `--url /contenido/C0NN`; automatizarlo queda pendiente).
+- [ ] Canal/tema por categoría.
+- [ ] Envío automático al crear contenido (Cloud Function o trigger).
 
 ### Fase 4 — UX y preparación del APK
 
@@ -318,6 +321,7 @@ dificultad, etiquetas, ejemplo y advertencia cuando aplica.
 | 2026-11-14 | Pantalla de detalle `/contenido/[id]` con metadatos, pasos de estrategia, nota y referencias. Copiado al portapapeles (`expo-clipboard`) en comando, ejemplo y pasos. Las tarjetas de categoría y los resultados de búsqueda ahora abren el detalle. |
 | 2026-11-14 | CRUD de contenidos: formulario `/contenido/editar` (crear y editar, con pasos para estrategias) y eliminación con confirmación desde el detalle. Botón `+` en Comandos. Escrituras solo con sesión iniciada (regla `auth != null`). |
 | 2026-11-14 | Cuenta y sesión reales: sesión persistente con `initializeAuth` + AsyncStorage, raíz que entra directo a Inicio si hay sesión, Perfil con datos de Firebase Auth, nombre editable en `Usuarios/{uid}` sincronizado con `displayName`, estadísticas reales (contenidos, categorías, puntos y racha), recuperar contraseña y cerrar sesión. |
+| 2026-11-14 | Push real: token guardado en `tokens/{uid}` (regla solo para el dueño), deep link con `data.url` al tocar la notificación, recordatorio diario del reto (19:00) con interruptor en la pestaña Push y script `scripts/enviar-push.mjs` que envía por Expo Push o FCM V1 y limpia tokens inválidos. |
 
 ---
 

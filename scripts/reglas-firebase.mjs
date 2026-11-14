@@ -5,6 +5,8 @@
  * - `contenidos`: lectura publica, escritura autenticada.
  * - `retos`: lectura publica (el invitado puede jugar), escritura autenticada.
  * - `progreso/{uid}`: solo el dueno puede leer y escribir su progreso.
+ * - `tokens/{uid}`: solo el dueno guarda su token de push; los scripts de envio
+ *   lo leen con la cuenta de servicio (admin, no pasa por reglas).
  *
  * Uso:
  *   node scripts/reglas-firebase.mjs --dry   # muestra el resultado
@@ -18,6 +20,12 @@ const REGLAS_NUEVAS = {
   contenidos: { '.read': true, '.write': 'auth != null' },
   retos: { '.read': true, '.write': 'auth != null' },
   progreso: {
+    $uid: {
+      '.read': 'auth != null && auth.uid == $uid',
+      '.write': 'auth != null && auth.uid == $uid',
+    },
+  },
+  tokens: {
     $uid: {
       '.read': 'auth != null && auth.uid == $uid',
       '.write': 'auth != null && auth.uid == $uid',

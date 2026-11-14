@@ -22,6 +22,7 @@ import { subscribeContenidos } from '../../services/contenidos';
 import { guardarPerfil, subscribePerfil } from '../../services/perfil';
 import type { PerfilUsuario } from '../../services/perfil';
 import { subscribeProgreso } from '../../services/retos';
+import { borrarTokenPush } from '../../services/tokens';
 import type { Contenido } from '../../types/contenido';
 import type { ProgresoRetos } from '../../types/reto';
 
@@ -162,6 +163,9 @@ export default function Perfil() {
           style: 'destructive',
           onPress: async () => {
             try {
+              if (uid) {
+                await borrarTokenPush(uid).catch(() => {});
+              }
               await signOut(auth);
               router.replace('/login' as never);
             } catch (e) {
