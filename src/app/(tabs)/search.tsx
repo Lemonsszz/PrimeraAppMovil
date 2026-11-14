@@ -5,11 +5,28 @@ import {
   TextInput,
   StatusBar,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+const CODIGO_FONDO = [
+  '0x4F2A   0x00FF   0x91C7   0x4F2A   0x00FF',
+  '01001010  0xA81F  10110101  0x4F2A   0x00FF',
+  '0xC4D9   01001101  0x7B20  0x4F2A   0x00FF',
+  '10101001  0xFF02  01100110  0x4F2A   0x00FF',
+  '0x8A21   11001010  0x41BC  0x4F2A   0x00FF',
+  '01010110  0xD920  10011001  0x4F2A   0x00FF',
+].join('\n');
 
 export default function Buscar() {
+  const insets = useSafeAreaInsets();
+
   return (
-    <View style={styles.contenedor}>
+    <View style={[styles.contenedor, { paddingTop: insets.top + 16 }]}>
       <StatusBar barStyle="light-content" />
+
+      {/* DECORACIÓN DE FONDO (debe ir dentro de <Text>) */}
+      <View pointerEvents="none" style={styles.codigoFondo}>
+        <Text style={styles.codigo}>{CODIGO_FONDO}</Text>
+      </View>
 
       <View style={styles.header}>
         <Text style={styles.logo}>$ SEARCH_</Text>
@@ -38,31 +55,6 @@ export default function Buscar() {
         <Text style={styles.nombre}>whoami</Text>
         <Text style={styles.descripcion}>Usuario actual del sistema</Text>
       </View>
-              0x4F2A   0x00FF   0x91C7  0x4F2A   0x00FF   0x91C7{'\n'}
-    01001010  0xA81F  10110101  0x4F2A   0x00FF   0x91C7{'\n'}
-    0xC4D9   01001101  0x7B20  0x4F2A   0x00FF   0x91C7{'\n'}
-    10101001  0xFF02  01100110  0x4F2A   0x00FF   0x91C7{'\n'}
-    0x8A21   11001010  0x41BC  0x4F2A   0x00FF   0x91C7{'\n'}
-    01010110  0xD920  10011001 0x4F2A   0x00FF   0x91C7
-            0x4F2A   0x00FF   0x91C7  0x4F2A   0x00FF   0x91C7{'\n'}
-    01001010  0xA81F  10110101  0x4F2A   0x00FF   0x91C7{'\n'}
-    0xC4D9   01001101  0x7B20  0x4F2A   0x00FF   0x91C7{'\n'}
-    10101001  0xFF02  01100110  0x4F2A   0x00FF   0x91C7{'\n'}
-    0x8A21   11001010  0x41BC  0x4F2A   0x00FF   0x91C7{'\n'}
-    01010110  0xD920  10011001 0x4F2A   0x00FF   0x91C7
-            0x4F2A   0x00FF   0x91C7  0x4F2A   0x00FF   0x91C7{'\n'}
-    01001010  0xA81F  10110101  0x4F2A   0x00FF   0x91C7{'\n'}
-    0xC4D9   01001101  0x7B20  0x4F2A   0x00FF   0x91C7{'\n'}
-    10101001  0xFF02  01100110  0x4F2A   0x00FF   0x91C7{'\n'}
-    0x8A21   11001010  0x41BC  0x4F2A   0x00FF   0x91C7{'\n'}
-    01010110  0xD920  10011001 0x4F2A   0x00FF   0x91C7
-            0x4F2A   0x00FF   0x91C7  0x4F2A   0x00FF   0x91C7{'\n'}
-    01001010  0xA81F  10110101  0x4F2A   0x00FF   0x91C7{'\n'}
-    0xC4D9   01001101  0x7B20  0x4F2A   0x00FF   0x91C7{'\n'}
-    10101001  0xFF02  01100110  0x4F2A   0x00FF   0x91C7{'\n'}
-    0x8A21   11001010  0x41BC  0x4F2A   0x00FF   0x91C7{'\n'}
-    01010110  0xD920  10011001 0x4F2A   0x00FF   0x91C7
-
     </View>
   );
 }
@@ -71,10 +63,23 @@ const styles = StyleSheet.create({
   contenedor: {
     flex: 1,
     backgroundColor: '#050805',
-    paddingTop: 55,
     paddingHorizontal: 20,
   },
-  
+
+  codigoFondo: {
+    position: 'absolute',
+    top: 120,
+    left: 10,
+    right: 10,
+    opacity: 0.08,
+  },
+
+  codigo: {
+    color: '#00FF88',
+    fontSize: 14,
+    lineHeight: 26,
+    letterSpacing: 2,
+  },
 
   header: {
     marginBottom: 25,
