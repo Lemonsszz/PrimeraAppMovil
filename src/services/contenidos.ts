@@ -155,6 +155,22 @@ export function subscribeContenidos(
   );
 }
 
+/** Escucha un contenido concreto por su ID. Entrega `null` si ya no existe. */
+export function subscribeContenido(
+  id: string,
+  onData: (contenido: Contenido | null) => void,
+  onError?: (error: Error) => void
+): Desuscribir {
+  return onValue(
+    ref(database, `contenidos/${id}`),
+    (snapshot) => {
+      const raw = snapshot.val();
+      onData(raw ? normalizarContenido(id, raw) : null);
+    },
+    (error) => onError?.(error as Error)
+  );
+}
+
 /** Búsqueda local por varios términos (todos deben aparecer). */
 export function filtrarContenidos(lista: Contenido[], consulta: string): Contenido[] {
   const terminos = consulta.trim().toLowerCase().split(/\s+/).filter(Boolean);
