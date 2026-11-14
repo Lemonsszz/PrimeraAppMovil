@@ -47,7 +47,8 @@ npx tsc --noEmit          # verificación de tipos
 npx eas build -p android --profile preview   # genera APK
 
 node scripts/migrar-contenidos.mjs   # migrar/actualizar datos a `contenidos`
-node scripts/reglas-firebase.mjs     # añadir reglas de `contenidos` en Firebase
+node scripts/seed-retos.mjs          # cargar/actualizar el banco de retos
+node scripts/reglas-firebase.mjs     # publicar reglas (contenidos, retos, progreso)
 ```
 
 ---
@@ -60,8 +61,11 @@ node scripts/reglas-firebase.mjs     # añadir reglas de `contenidos` en Firebas
 | Modelo unificado `contenidos` | ✅ Migrado y normalizado (2026-11-14) |
 | Lectura de contenidos (Realtime DB) | ✅ Funciona |
 | Notificaciones locales y tokens | ✅ Funciona |
-| Navegación por pestañas | ✅ Funciona |
+| Navegación por pestañas | ✅ Funciona (Inicio, Push, Comandos, Retos, Buscar, Perfil) |
 | Búsqueda real (título, resumen, categoría, tags) | ✅ Funciona |
+| Inicio introductorio con accesos directos | ✅ Funciona |
+| Comandos agrupados por categoría + buscador por categoría | ✅ Funciona |
+| Reto diario (preguntas, puntos y racha) | ✅ Funciona (31 preguntas) |
 | Crear / editar / borrar comandos | ⛔ No existe |
 | Favoritos / perfil real | ⛔ Maqueta |
 | Persistencia de sesión / logout | ⛔ No existe |
@@ -100,13 +104,32 @@ node scripts/reglas-firebase.mjs     # añadir reglas de `contenidos` en Firebas
 - [x] Migrar los comandos actuales a la nueva estructura (sin perder datos; `Comandos` queda de respaldo).
 - [ ] Pantalla de detalle `/contenido/[id]`: comando completo, explicación, plataforma, ejemplo, referencias y pasos (si es estrategia).
 - [ ] Botón **copiar al portapapeles** (`expo-clipboard`).
-- [ ] Crear contenido desde Inicio (el botón hoy no hace nada).
+- [ ] Crear contenido desde la app (hoy se carga con scripts).
 - [ ] Editar y eliminar contenido.
 - [x] **Búsqueda real en vivo** sobre título, resumen, categoría, plataforma y etiquetas.
-- [ ] Filtros: tipo (comando/estrategia), categoría, plataforma y dificultad.
+- [x] **Comandos organizados por tarjetas de categoría** con contador y descripción.
+- [x] **Pantalla de categoría** (`/categoria/[categoria]`) con su propio buscador.
+- [x] **Inicio introductorio** con accesos directos a las demás pestañas y CTA del reto diario (sustituye a "AGREGAR COMANDO").
+- [ ] Filtros: tipo (comando/estrategia), plataforma y dificultad.
 - [ ] Favoritos (`favoritos/{uid}/{id}`).
-- [ ] Estados de UI: cargando, vacío, error y reintento.
+- [ ] Botón de reintento en los estados de error.
 - [ ] Probar todo en **Expo Go** (sin APK) y solo compilar al final.
+
+### Fase 1b — Reto diario estilo HTB (✅ completada 2026-11-14)
+
+- [x] Pestaña **Retos** (sustituye a la antigua pestaña Notas).
+- [x] Banco de **31 preguntas** en el nodo `retos` (`scripts/seed-retos.mjs`).
+- [x] **5 preguntas por día** elegidas de forma determinista: todos ven el mismo
+      reto y cambia automáticamente a medianoche (hash FNV-1a de fecha + id).
+- [x] Flujo secuencial: responder → ver explicación → siguiente pregunta → resumen.
+- [x] **Puntos**: 10 por acierto + 20 de bonus si se aciertan todas.
+- [x] **Racha diaria**: +1 si se completa el reto y el anterior fue ayer.
+- [x] Progreso guardado por usuario en `progreso/{uid}/retos`.
+- [x] Modo invitado: se puede jugar, pero no se guardan puntos ni racha.
+- [ ] Notificación/recordatorio push del reto diario.
+- [ ] Ranking o comparación entre usuarios.
+- [ ] Validación de respuestas en servidor (hoy el banco se lee desde el cliente).
+- [ ] Ampliar el banco de preguntas por categoría.
 
 ### Fase 2 — Cuenta, datos y seguridad
 
@@ -114,7 +137,7 @@ node scripts/reglas-firebase.mjs     # añadir reglas de `contenidos` en Firebas
 - [ ] Cerrar sesión y borrar datos locales.
 - [ ] Recuperar contraseña (`sendPasswordResetEmail`).
 - [ ] Perfil real: email, nombre, estadísticas calculadas.
-- [x] Reglas de Realtime Database (lectura pública de `Comandos`, escritura solo autenticada, `Usuarios` protegido). Verificado 2026-11-14.
+- [x] Reglas de Realtime Database: lectura pública de `Comandos`, `contenidos` y `retos`; escritura autenticada; `Usuarios` protegido; `progreso/$uid` solo para su dueño. Verificado 2026-11-14.
 - [ ] Firebase App Check.
 - [ ] Mover configuración de Firebase a variables de entorno (`EXPO_PUBLIC_*`).
 - [x] `google-service-account.json`: se conserva en disco por decisión del usuario; está ignorado por git y no se comparte.
@@ -152,7 +175,8 @@ node scripts/reglas-firebase.mjs     # añadir reglas de `contenidos` en Firebas
 - [ ] Notas personales por contenido.
 - [ ] Etiquetas y historial de vistos.
 - [ ] Modo offline con `expo-sqlite`.
-- [ ] Reto diario con push.
+- [ ] Reto diario con push (recordatorio).
+- [ ] Ranking del reto diario.
 - [ ] Bloqueo con biometría (`expo-local-authentication`).
 - [ ] i18n (es/en).
 
@@ -199,8 +223,45 @@ nodo `Comandos` se conserva como respaldo. Script: `node scripts/migrar-contenid
 }
 ```
 
-Otros nodos previstos: `favoritos/{uid}/{id}`, `notas/{uid}/{id}`,
-`tokens/{uid}/{instalacion}` y `usuarios/{uid}`.
+Otros nodos previstos: `favoritos/{uid}/{id}`, `tokens/{uid}/{instalacion}` y
+`usuarios/{uid}`.
+
+### Reto diario: modelo aplicado (✅ 2026-11-14)
+
+Banco de preguntas en `retos/{id}`:
+
+```json
+{
+  "pregunta": "¿Qué comando muestra la tabla ARP en Windows?",
+  "opciones": ["arp -a", "netstat -an", "ipconfig /all", "route print"],
+  "correcta": 0,
+  "explicacion": "arp -a lista las direcciones IP y MAC...",
+  "categoria": "NETWORKING",
+  "dificultad": "basico",
+  "puntos": 10
+}
+```
+
+Progreso por usuario en `progreso/{uid}/retos`:
+
+```json
+{
+  "puntosTotales": 120,
+  "racha": 3,
+  "ultimaFecha": "2026-11-14",
+  "hoy": {
+    "fecha": "2026-11-14",
+    "completado": true,
+    "correctas": 5,
+    "total": 5,
+    "puntos": 70
+  }
+}
+```
+
+Reglas publicadas: `retos` es de lectura pública (el invitado puede jugar) y
+escritura autenticada; `progreso/$uid` solo es accesible por su dueño
+(`auth.uid == $uid`).
 
 **Problemas corregidos en la migración** (nodo antiguo `Comandos`):
 
@@ -227,6 +288,8 @@ dificultad, etiquetas, ejemplo y advertencia cuando aplica.
 - [ ] Instalar el APK en un dispositivo real y probar:
   - [ ] login / registro / invitado,
   - [ ] pestaña Buscar (no debe crashear),
+  - [ ] categorías de Comandos y su buscador,
+  - [ ] reto diario completo (puntos y racha se guardan al iniciar sesión),
   - [ ] lectura de comandos desde Firebase,
   - [ ] notificación local,
   - [ ] push real recibido.
@@ -240,6 +303,7 @@ dificultad, etiquetas, ejemplo y advertencia cuando aplica.
 | 2026-11-14 | Fase 0: git recuperado (`main` con la versión final), crash de Buscar corregido, safe area en todas las pantallas, handler de push global, limpieza y verificación de tipos. |
 | 2026-11-14 | Reglas de Firebase aplicadas y verificadas (raíz y `Usuarios` en 401, `Comandos` público para invitado). Detectados 4 campos mal escritos en la base y propuesto el modelo `contenidos`. |
 | 2026-11-14 | Migración a `contenidos`: 6 comandos normalizados (typos, sintaxis de nmap, plataforma, dificultad, tags, riesgo). Regla pública de `contenidos` publicada. App leyendo `contenidos` y búsqueda real funcionando. |
+| 2026-11-14 | Reto diario: 31 preguntas cargadas en `retos`, reglas de `retos` y `progreso/$uid` publicadas, pestaña Retos sustituye a Notas, inicio introductorio, comandos por categorías con buscador propio. |
 
 ---
 
@@ -258,4 +322,9 @@ dificultad, etiquetas, ejemplo y advertencia cuando aplica.
   Expo Go, no un fallo de la app); las notificaciones locales sí funcionan.
 - El nodo `Comandos` se conserva como respaldo de la migración. Se puede borrar
   cuando la app lleve un tiempo funcionando con `contenidos`.
+- El reto diario usa la **fecha local del dispositivo** (`YYYY-MM-DD`). Si el
+  usuario cambia la hora del teléfono puede repetir el reto; para una versión
+  seria habría que validar en servidor.
+- La pestaña **Notas** se eliminó: su hueco lo ocupa **Retos**. Las notas
+  personales quedan como extra futuro dentro del detalle de cada contenido.
 
