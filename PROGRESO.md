@@ -11,9 +11,10 @@
 
 ## 1. Objetivo del proyecto
 
-App móvil estilo terminal (estética CyberVault: negro + verde `#00FF88`) para
-**guardar, organizar, buscar y consultar comandos de ciberseguridad**
-(Linux, Windows, Redes, Seguridad, Recon), con:
+App móvil estilo terminal (estética CyberVault: negro + verde `#00FF88`) pensada
+como un **"santuario" de conocimiento de ciberseguridad**: un lugar único donde
+buscar, guardar y consultar **comandos, estrategias, tácticas y procedimientos**
+(Linux, Windows, Redes, Seguridad, Recon, Kali...), con:
 
 - Autenticación de usuarios con **Firebase Auth**.
 - Comandos almacenados en **Firebase Realtime Database**.
@@ -60,7 +61,8 @@ npx eas build -p android --profile preview   # genera APK
 | Crear / editar / borrar comandos | ⛔ No existe |
 | Favoritos / perfil real | ⛔ Maqueta |
 | Persistencia de sesión / logout | ⛔ No existe |
-| Reglas de seguridad de Firebase | ⚠️ Pendiente de verificar |
+| Reglas de seguridad de Firebase | ✅ Aplicadas y verificadas (2026-11-14) |
+| Prueba local sin APK | ✅ Expo Go / Metro |
 | APK de entrega | 🟡 Configurado, pendiente de compilar |
 
 ---
@@ -73,6 +75,9 @@ npx eas build -p android --profile preview   # genera APK
       `main` apuntaba a una rama vieja. Se creó la rama `final-notificaciones`,
       se fusionó el histórico de `main` conservando la versión final y `main`
       quedó al día.
+- [x] **Reglas de Realtime Database aplicadas y verificadas.** La raíz y
+      `Usuarios` responden `401` sin autenticación; `Comandos` sigue de lectura
+      pública para el modo invitado; la escritura exige usuario autenticado.
 - [x] **Crash de la pestaña Buscar corregido.** Había texto suelto fuera de
       `<Text>` (`search.tsx`), lo que rompía la pantalla en el APK. Ahora es una
       decoración de fondo válida.
@@ -85,17 +90,19 @@ npx eas build -p android --profile preview   # genera APK
 - [x] `.gitignore` para material de apoyo local (PDF, capturas).
 - [x] Verificación de tipos (`npx tsc --noEmit`) sin errores.
 
-### Fase 1 — Funcionalidad core de comandos (🔜 siguiente)
+### Fase 1 — Funcionalidad core del santuario (🔜 siguiente)
 
-- [ ] Modelo de datos tipado: `Comando { id, nombre, categoria, descripcion, comando, plataforma, tags }`.
-- [ ] Pantalla de detalle `/comando/[id]` (comando completo, explicación, plataforma).
+- [ ] **Modelo de datos unificado** (`contenidos`) con tipos: comando, estrategia, payload, herramienta y cheatsheet.
+- [ ] Migrar los comandos actuales a la nueva estructura (sin perder datos).
+- [ ] Pantalla de detalle `/contenido/[id]`: comando completo, explicación, plataforma, ejemplo, referencias y pasos (si es estrategia).
 - [ ] Botón **copiar al portapapeles** (`expo-clipboard`).
-- [ ] Crear comando desde Inicio (el botón hoy no hace nada).
-- [ ] Editar y eliminar comandos.
-- [ ] Búsqueda real en vivo (nombre, categoría, descripción).
-- [ ] Filtro por categoría desde la pestaña Categorías/Notas.
-- [ ] Favoritos (`favoritos/{uid}/{comandoId}`).
+- [ ] Crear contenido desde Inicio (el botón hoy no hace nada).
+- [ ] Editar y eliminar contenido.
+- [ ] **Búsqueda real en vivo** sobre título, resumen, categoría, plataforma y etiquetas.
+- [ ] Filtros: tipo (comando/estrategia), categoría, plataforma y dificultad.
+- [ ] Favoritos (`favoritos/{uid}/{id}`).
 - [ ] Estados de UI: cargando, vacío, error y reintento.
+- [ ] Probar todo en **Expo Go** (sin APK) y solo compilar al final.
 
 ### Fase 2 — Cuenta, datos y seguridad
 
@@ -103,10 +110,10 @@ npx eas build -p android --profile preview   # genera APK
 - [ ] Cerrar sesión y borrar datos locales.
 - [ ] Recuperar contraseña (`sendPasswordResetEmail`).
 - [ ] Perfil real: email, nombre, estadísticas calculadas.
-- [ ] Reglas de Realtime Database (lectura pública, escritura solo autenticada, validación de campos).
+- [x] Reglas de Realtime Database (lectura pública de `Comandos`, escritura solo autenticada, `Usuarios` protegido). Verificado 2026-11-14.
 - [ ] Firebase App Check.
 - [ ] Mover configuración de Firebase a variables de entorno (`EXPO_PUBLIC_*`).
-- [ ] Rotar/eliminar `google-service-account.json` del disco (ya subido a EAS).
+- [x] `google-service-account.json`: se conserva en disco por decisión del usuario; está ignorado por git y no se comparte.
 
 ### Fase 3 — Push de verdad
 
@@ -137,13 +144,72 @@ npx eas build -p android --profile preview   # genera APK
 
 ### Fase 6 — Extras que suman
 
-- [ ] Importar/exportar comandos (JSON/Markdown) y compartir.
-- [ ] Notas personales por comando.
+- [ ] Importar/exportar contenido (JSON/Markdown) y compartir.
+- [ ] Notas personales por contenido.
 - [ ] Etiquetas y historial de vistos.
 - [ ] Modo offline con `expo-sqlite`.
 - [ ] Reto diario con push.
 - [ ] Bloqueo con biometría (`expo-local-authentication`).
 - [ ] i18n (es/en).
+
+### Modelo de datos propuesto (⏳ pendiente de aprobación)
+
+Nodo unificado `contenidos` para que una sola búsqueda cubra comandos y
+estrategias:
+
+```json
+{
+  "contenidos": {
+    "C001": {
+      "tipo": "comando",
+      "titulo": "ip addr",
+      "resumen": "Lista interfaces de red y direcciones IP.",
+      "categoria": "NETWORKING",
+      "plataformas": ["linux"],
+      "cuerpo": "ip addr show",
+      "ejemplo": "ip addr show eth0",
+      "dificultad": "basico",
+      "tags": ["red", "ip"],
+      "riesgo": "bajo",
+      "creadoPor": "uid",
+      "creadoEn": 0,
+      "actualizadoEn": 0
+    },
+    "E001": {
+      "tipo": "estrategia",
+      "titulo": "Enumeración de red interna",
+      "resumen": "Descubrir hosts y servicios antes de explotar.",
+      "categoria": "RECON",
+      "plataformas": ["linux"],
+      "pasos": [
+        { "titulo": "Descubrir hosts", "comando": "arp-scan -l", "detalle": "..." }
+      ],
+      "dificultad": "intermedio",
+      "tags": ["recon", "pivoting"],
+      "creadoPor": "uid",
+      "creadoEn": 0,
+      "actualizadoEn": 0
+    }
+  }
+}
+```
+
+Otros nodos previstos: `favoritos/{uid}/{id}`, `notas/{uid}/{id}`,
+`tokens/{uid}/{instalacion}` y `usuarios/{uid}`.
+
+**Problemas detectados en los datos actuales** (nodo `Comandos`):
+
+| ID | Problema |
+| --- | --- |
+| C002 | Campo `descripción` (con tilde) → la app lo muestra como `undefined` |
+| C003 | Campo `descripción` (con tilde) → `undefined` |
+| C004 | Campo `categeoria` (mal escrito) → categoría `undefined` |
+| C005 | Campo `descripcio` (mal escrito) → descripción `undefined` |
+| C0006 | Categoría `KALI` no existe en las categorías de la app |
+| C004 | `nmap -p 192.168.#.#` no es una sintaxis válida de nmap |
+
+Además, a todos les falta: comando ejecutable separado del nombre, plataforma,
+dificultad, etiquetas y ejemplo.
 
 ---
 
@@ -167,6 +233,7 @@ npx eas build -p android --profile preview   # genera APK
 | Fecha | Cambio |
 | --- | --- |
 | 2026-11-14 | Fase 0: git recuperado (`main` con la versión final), crash de Buscar corregido, safe area en todas las pantallas, handler de push global, limpieza y verificación de tipos. |
+| 2026-11-14 | Reglas de Firebase aplicadas y verificadas (raíz y `Usuarios` en 401, `Comandos` público para invitado). Detectados 4 campos mal escritos en la base y propuesto el modelo `contenidos`. |
 
 ---
 
@@ -179,3 +246,8 @@ npx eas build -p android --profile preview   # genera APK
 - `google-service-account.json` es **secreto**: nunca debe subirse al repo.
 - La app está pensada **solo para móvil** (Android primero). La build web existe
   por defecto en Expo pero no es un objetivo del proyecto.
+- **Flujo de trabajo:** probar siempre en local con **Expo Go** (`npx expo start`)
+  y compilar el APK con EAS solo cuando la funcionalidad esté cerrada.
+- En Expo Go **no** funcionan los push remotos de Android (es una limitación de
+  Expo Go, no un fallo de la app); las notificaciones locales sí funcionan.
+
