@@ -54,11 +54,11 @@ export default function TabsLayout() {
       />
 
       <Tabs.Screen
-        name="notas"
+        name="retos"
         options={{
-          title: 'Notas',
+          title: 'Retos',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="document-text-outline" color={color} size={size} />
+            <Ionicons name="trophy-outline" color={color} size={size} />
           ),
         }}
       />

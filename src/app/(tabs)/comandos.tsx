@@ -1,21 +1,29 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useEffect, useState } from 'react';
+import { useRouter } from 'expo-router';
+import { useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
   StatusBar,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
-import { Card } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { infoCategoria } from '../../constants/categorias';
 import { subscribeContenidos } from '../../services/contenidos';
 import type { Contenido } from '../../types/contenido';
 
+type GrupoCategoria = {
+  categoria: string;
+  total: number;
+};
+
 export default function Comandos() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const [contenidos, setContenidos] = useState<Contenido[]>([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -34,16 +42,32 @@ export default function Comandos() {
     );
   }, []);
 
+  const categorias = useMemo<GrupoCategoria[]>(() => {
+    const conteo = new Map<string, number>();
+    for (const contenido of contenidos) {
+      const clave = contenido.categoria.toUpperCase();
+      conteo.set(clave, (conteo.get(clave) ?? 0) + 1);
+    }
+
+    return [...conteo.entries()]
+      .map(([categoria, total]) => ({ categoria, total }))
+      .sort((a, b) => a.categoria.localeCompare(b.categoria, 'es'));
+  }, [contenidos]);
+
+  const abrirCategoria = (categoria: string) => {
+    router.push(`/categoria/${encodeURIComponent(categoria)}` as never);
+  };
+
   return (
     <View style={[styles.contenedor, { paddingTop: insets.top + 16 }]}>
       <StatusBar barStyle="light-content" />
 
       <View style={styles.header}>
-        <Text style={styles.logo}>$ COMMANDS_</Text>
+        <Text style={styles.logo}>$ CATEGORIES_</Text>
         <Text style={styles.subtitulo}>
           {cargando
             ? 'CARGANDO...'
-            : `${contenidos.length} CONTENIDOS GUARDADOS`}
+            : `${categorias.length} CATEGORÍAS · ${contenidos.length} CONTENIDOS`}
         </Text>
       </View>
 
@@ -51,8 +75,8 @@ export default function Comandos() {
         <ActivityIndicator style={styles.cargando} color="#00FF88" size="large" />
       ) : (
         <FlatList
-          data={contenidos}
-          keyExtractor={(item) => item.id}
+          data={categorias}
+          keyExtractor={(item) => item.categoria}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.lista}
           ListEmptyComponent={
@@ -60,59 +84,42 @@ export default function Comandos() {
               {error ?? 'Todavía no hay comandos guardados.'}
             </Text>
           }
-          renderItem={({ item }) => <TarjetaContenido contenido={item} />}
+          renderItem={({ item }) => {
+            const info = infoCategoria(item.categoria);
+
+            return (
+              <TouchableOpacity
+                style={styles.categoria}
+                activeOpacity={0.85}
+                onPress={() => abrirCategoria(item.categoria)}
+              >
+                <View style={styles.iconoCaja}>
+                  <Ionicons name={info.icono} size={26} color="#00FF88" />
+                </View>
+
+                <View style={styles.categoriaTexto}>
+                  <Text style={styles.categoriaNombre}>{item.categoria}</Text>
+                  <Text style={styles.categoriaDetalle}>{info.descripcion}</Text>
+                </View>
+
+                <View style={styles.contador}>
+                  <Text style={styles.contadorNumero}>{item.total}</Text>
+                  <Text style={styles.contadorEtiqueta}>
+                    {item.total === 1 ? 'ÍTEM' : 'ÍTEMS'}
+                  </Text>
+                </View>
+
+                <Ionicons
+                  name="chevron-forward-outline"
+                  size={18}
+                  color="#526158"
+                />
+              </TouchableOpacity>
+            );
+          }}
         />
       )}
     </View>
-  );
-}
-
-function TarjetaContenido({ contenido }: { contenido: Contenido }) {
-  const etiquetas = [
-    ...contenido.plataformas,
-    ...(contenido.dificultad ? [contenido.dificultad] : []),
-    ...contenido.tags,
-  ];
-
-  return (
-    <Card style={styles.comando}>
-      <Card.Content>
-        <Text style={styles.categoria}>
-          {contenido.categoria} · {contenido.tipo.toUpperCase()}
-        </Text>
-
-        <Text style={styles.nombre}>{contenido.titulo}</Text>
-
-        {contenido.resumen ? (
-          <Text style={styles.descripcion}>{contenido.resumen}</Text>
-        ) : null}
-
-        {contenido.cuerpo ? (
-          <View style={styles.codigoCaja}>
-            <Text selectable style={styles.codigo}>
-              $ {contenido.cuerpo}
-            </Text>
-          </View>
-        ) : null}
-
-        {etiquetas.length > 0 ? (
-          <View style={styles.etiquetas}>
-            {etiquetas.map((etiqueta, indice) => (
-              <Text key={`${etiqueta}-${indice}`} style={styles.etiqueta}>
-                {etiqueta}
-              </Text>
-            ))}
-          </View>
-        ) : null}
-      </Card.Content>
-
-      {contenido.advertencia ? (
-        <Card.Content style={styles.advertenciaCaja}>
-          <Ionicons name="warning-outline" size={14} color="#FFC107" />
-          <Text style={styles.advertencia}>{contenido.advertencia}</Text>
-        </Card.Content>
-      ) : null}
-    </Card>
   );
 }
 
@@ -148,84 +155,65 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
   },
 
-  comando: {
+  categoria: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
     backgroundColor: '#080D0A',
     borderWidth: 1,
     borderColor: '#123D29',
     borderRadius: 10,
-    marginBottom: 15,
-    overflow: 'hidden',
+    paddingVertical: 14,
+    paddingHorizontal: 14,
+    marginBottom: 12,
   },
 
-  categoria: {
-    color: '#00FF88',
-    fontSize: 11,
-    fontWeight: '800',
-    letterSpacing: 2,
-    marginBottom: 8,
-  },
-
-  nombre: {
-    color: '#FFFFFF',
-    fontSize: 19,
-    fontWeight: '700',
-    marginBottom: 8,
-  },
-
-  descripcion: {
-    color: '#819187',
-    fontSize: 13,
-    lineHeight: 19,
-  },
-
-  codigoCaja: {
-    marginTop: 12,
-    backgroundColor: '#050805',
+  iconoCaja: {
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    backgroundColor: '#071A10',
     borderWidth: 1,
     borderColor: '#123D29',
-    borderRadius: 6,
-    paddingVertical: 8,
-    paddingHorizontal: 10,
-  },
-
-  codigo: {
-    color: '#00FF88',
-    fontSize: 12,
-    fontFamily: 'monospace',
-  },
-
-  etiquetas: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 6,
-    marginTop: 12,
-  },
-
-  etiqueta: {
-    color: '#718078',
-    fontSize: 10,
-    borderWidth: 1,
-    borderColor: '#123D29',
-    borderRadius: 4,
-    paddingVertical: 2,
-    paddingHorizontal: 6,
-  },
-
-  advertenciaCaja: {
-    flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    borderTopWidth: 1,
-    borderTopColor: '#123D29',
-    paddingTop: 10,
-    paddingBottom: 12,
+    justifyContent: 'center',
   },
 
-  advertencia: {
-    color: '#FFC107',
-    fontSize: 11,
+  categoriaTexto: {
     flex: 1,
-    lineHeight: 16,
+  },
+
+  categoriaNombre: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '900',
+    letterSpacing: 1.5,
+  },
+
+  categoriaDetalle: {
+    color: '#718078',
+    fontSize: 11,
+    marginTop: 4,
+    lineHeight: 15,
+  },
+
+  contador: {
+    alignItems: 'center',
+    minWidth: 34,
+  },
+
+  contadorNumero: {
+    color: '#00FF88',
+    fontSize: 18,
+    fontWeight: '900',
+  },
+
+  contadorEtiqueta: {
+    color: '#526158',
+    fontSize: 8,
+    fontWeight: '800',
+    letterSpacing: 1,
+    marginTop: 1,
   },
 
   vacio: {

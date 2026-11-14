@@ -1,50 +1,128 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  StatusBar,
-} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+import type { ComponentProps } from 'react';
+import {
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+type NombreIcono = ComponentProps<typeof Ionicons>['name'];
+
+type Acceso = {
+  titulo: string;
+  detalle: string;
+  icono: NombreIcono;
+  ruta: string;
+};
+
+const ACCESOS: Acceso[] = [
+  {
+    titulo: 'COMANDOS',
+    detalle: 'Explora por categorías',
+    icono: 'code-slash-outline',
+    ruta: '/comandos',
+  },
+  {
+    titulo: 'BUSCAR',
+    detalle: 'Comandos y estrategias',
+    icono: 'search-outline',
+    ruta: '/search',
+  },
+  {
+    titulo: 'NOTIFICACIONES',
+    detalle: 'Prueba el push',
+    icono: 'notifications-outline',
+    ruta: '/notificaciones',
+  },
+  {
+    titulo: 'PERFIL',
+    detalle: 'Tu cuenta',
+    icono: 'person-outline',
+    ruta: '/profile',
+  },
+];
 
 export default function Inicio() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
 
   return (
     <View style={[styles.contenedor, { paddingTop: insets.top + 16 }]}>
       <StatusBar barStyle="light-content" />
 
-      <View style={styles.header}>
-        <Text style={styles.logo}>CYBERVAULT_</Text>
-        <Text style={styles.subtitulo}>COMMAND LIBRARY</Text>
-      </View>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.contenido}
+      >
+        <View style={styles.header}>
+          <Text style={styles.logo}>CYBERVAULT_</Text>
+          <Text style={styles.subtitulo}>SANTUARIO DE CIBERSEGURIDAD</Text>
+        </View>
 
-      <Image
-        source={{
-          uri: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        }}
-        style={styles.imagen}
-      />
+        <View style={styles.hero}>
+          <Text style={styles.heroEtiqueta}>$ BIENVENIDO</Text>
+          <Text style={styles.heroTitulo}>Tu conocimiento, en un solo lugar</Text>
+          <Text style={styles.heroTexto}>
+            Guarda, organiza y consulta comandos, estrategias y técnicas de
+            ciberseguridad. Todo listo para cuando lo necesites.
+          </Text>
+        </View>
 
-      <View style={styles.contenido}>
-        <Text style={styles.titulo}>$ MIS COMANDOS</Text>
+        <TouchableOpacity
+          style={styles.reto}
+          activeOpacity={0.85}
+          onPress={() => router.push('/retos')}
+        >
+          <View style={styles.retoIcono}>
+            <Ionicons name="trophy-outline" size={26} color="#050805" />
+          </View>
 
-        <Text style={styles.descripcion}>
-          Guarda, organiza y consulta tus comandos de ciberseguridad desde
-          cualquier lugar.
-        </Text>
+          <View style={styles.retoTexto}>
+            <Text style={styles.retoEtiqueta}>RETO DIARIO</Text>
+            <Text style={styles.retoTitulo}>Pon a prueba tu nivel</Text>
+            <Text style={styles.retoDetalle}>
+              5 preguntas · puntos · racha
+            </Text>
+          </View>
 
-        <TouchableOpacity style={styles.boton} activeOpacity={0.8}>
-
-          <Text style={styles.textoBoton}><Ionicons style={styles.icono}
-                name="add-circle-outline"
-                size={50}
-                color="#00FF88"
-              />AGREGAR COMANDO </Text>
+          <Ionicons name="arrow-forward-outline" size={20} color="#050805" />
         </TouchableOpacity>
-      </View>
+
+        <Text style={styles.seccion}>EXPLORAR</Text>
+
+        <View style={styles.accesos}>
+          {ACCESOS.map((acceso) => (
+            <TouchableOpacity
+              key={acceso.ruta}
+              style={styles.acceso}
+              activeOpacity={0.85}
+              onPress={() => router.push(acceso.ruta as never)}
+            >
+              <Ionicons
+                name={acceso.icono}
+                size={24}
+                color="#00FF88"
+                style={styles.accesoIcono}
+              />
+              <Text style={styles.accesoTitulo}>{acceso.titulo}</Text>
+              <Text style={styles.accesoDetalle}>{acceso.detalle}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        <View style={styles.tip}>
+          <Ionicons name="terminal-outline" size={14} color="#526158" />
+          <Text style={styles.tipTexto}>
+            Consejo: usa la pestaña Buscar para encontrar cualquier técnica por
+            nombre, categoría o etiqueta.
+          </Text>
+        </View>
+      </ScrollView>
     </View>
   );
 }
@@ -53,19 +131,15 @@ const styles = StyleSheet.create({
   contenedor: {
     flex: 1,
     backgroundColor: '#050805',
-    alignItems: 'center',
-    paddingTop: 55,
+    paddingHorizontal: 20,
   },
-    icono: {
-    color: '#00FF88',
-    fontSize: 17,
-    fontWeight: '900',
-    marginRight: 15,
+
+  contenido: {
+    paddingBottom: 40,
   },
 
   header: {
-    width: '90%',
-    marginBottom: 25,
+    marginBottom: 22,
   },
 
   logo: {
@@ -83,56 +157,133 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
 
-  imagen: {
-    width: '90%',
-    height: 230,
-    borderRadius: 12,
-    resizeMode: 'cover',
+  hero: {
+    backgroundColor: '#080D0A',
     borderWidth: 1,
     borderColor: '#123D29',
+    borderRadius: 12,
+    padding: 18,
   },
 
-  contenido: {
-    width: '90%',
-    marginTop: 25,
-  },
-
-  titulo: {
+  heroEtiqueta: {
     color: '#00FF88',
-    fontSize: 23,
+    fontSize: 10,
+    fontWeight: '800',
+    letterSpacing: 2,
+    marginBottom: 8,
+  },
+
+  heroTitulo: {
+    color: '#FFFFFF',
+    fontSize: 21,
+    fontWeight: '800',
+    lineHeight: 27,
+  },
+
+  heroTexto: {
+    color: '#819187',
+    fontSize: 13,
+    lineHeight: 20,
+    marginTop: 10,
+  },
+
+  reto: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+    backgroundColor: '#00FF88',
+    borderRadius: 12,
+    padding: 16,
+    marginTop: 16,
+  },
+
+  retoIcono: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#050805',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  retoTexto: {
+    flex: 1,
+  },
+
+  retoEtiqueta: {
+    color: '#053B22',
+    fontSize: 9,
+    fontWeight: '900',
+    letterSpacing: 2,
+  },
+
+  retoTitulo: {
+    color: '#050805',
+    fontSize: 16,
+    fontWeight: '900',
+    marginTop: 2,
+  },
+
+  retoDetalle: {
+    color: '#054027',
+    fontSize: 11,
+    marginTop: 2,
+  },
+
+  seccion: {
+    color: '#526158',
+    fontSize: 10,
+    fontWeight: '800',
+    letterSpacing: 3,
+    marginTop: 28,
+    marginBottom: 12,
+  },
+
+  accesos: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+
+  acceso: {
+    width: '48%',
+    flexGrow: 1,
+    backgroundColor: '#080D0A',
+    borderWidth: 1,
+    borderColor: '#123D29',
+    borderRadius: 10,
+    padding: 14,
+  },
+
+  accesoIcono: {
+    marginBottom: 10,
+  },
+
+  accesoTitulo: {
+    color: '#FFFFFF',
+    fontSize: 12,
     fontWeight: '900',
     letterSpacing: 1,
   },
 
-  descripcion: {
-    color: '#91A69A',
-    fontSize: 14,
-    lineHeight: 21,
-    marginTop: 10,
+  accesoDetalle: {
+    color: '#718078',
+    fontSize: 11,
+    marginTop: 4,
+    lineHeight: 15,
   },
 
-  boton: {
-    backgroundColor: '#071A10',
-    marginTop: 25,
-    paddingVertical: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#00FF88',
-    shadowColor: '#00FF88',
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 6,
+  tip: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 8,
+    marginTop: 24,
   },
 
-  textoBoton: {
-    color: '#00FF88',
-    fontSize: 13,
-    fontWeight: '800',
-    letterSpacing: 1,
+  tipTexto: {
+    color: '#526158',
+    fontSize: 11,
+    lineHeight: 16,
+    flex: 1,
   },
 });
