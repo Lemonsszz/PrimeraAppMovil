@@ -48,7 +48,9 @@
     "datos:migrar": "node ./scripts/migrar-contenidos.mjs",
     "datos:retos": "node ./scripts/seed-retos.mjs",
     "datos:importar": "node ./scripts/importar-contenidos.mjs",
-    "datos:reglas": "node ./scripts/reglas-firebase.mjs"
+    "datos:reglas": "node ./scripts/reglas-firebase.mjs",
+    "push:enviar": "node ./scripts/enviar-push.mjs",
+    "push:recordatorio": "node ./scripts/enviar-push.mjs --recordatorio"
   },
   "private": true
 }

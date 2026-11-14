@@ -14,16 +14,25 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import {
+  HORA_RECORDATORIO,
+  cancelarRecordatorioDiarioAsync,
   ensureNotificationPermissionsAsync,
   getProjectId,
   getPushTokensAsync,
+  programarRecordatorioDiarioAsync,
+  pushRemotoDisponible,
+  recordatorioDiarioActivo,
   scheduleLocalTestNotificationAsync,
 } from '../../notifications';
+import { useUsuario } from '../../services/auth';
+import { guardarTokenPush, subscribeTokenPush } from '../../services/tokens';
+import type { TokenGuardado } from '../../services/tokens';
 
 type Estado = 'cargando' | 'listo' | 'error';
 
 export default function Notificaciones() {
   const insets = useSafeAreaInsets();
+  const { uid, cargando: cargandoSesion } = useUsuario();
   const [estado, setEstado] = useState<Estado>('cargando');
   const [permiso, setPermiso] = useState(false);
   const [expoToken, setExpoToken] = useState<string | null>(null);
@@ -31,8 +40,12 @@ export default function Notificaciones() {
   const [error, setError] = useState<string | null>(null);
   const [ultima, setUltima] = useState<Notifications.Notification | null>(null);
   const [probando, setProbando] = useState(false);
+  const [tokenGuardado, setTokenGuardado] = useState<TokenGuardado | null>(null);
+  const [recordatorio, setRecordatorio] = useState(false);
+  const [cambiandoRecordatorio, setCambiandoRecordatorio] = useState(false);
 
   const projectId = getProjectId();
+  const remoto = pushRemotoDisponible();
 
   const cargarTokens = useCallback(async () => {
     setEstado('cargando');
@@ -46,7 +59,75 @@ export default function Notificaciones() {
     setFcmToken(tokens.fcmToken);
     setError(tokens.error);
     setEstado(tokens.expoPushToken || tokens.fcmToken ? 'listo' : 'error');
+
+    return tokens;
   }, []);
+
+  // Cuando hay sesión y tokens, los guarda en `tokens/{uid}` para que el
+  // script de envío pueda alcanzar este dispositivo. Se repite si el token
+  // cambia (por ejemplo al recargar).
+  useEffect(() => {
+    if (cargandoSesion) return;
+
+    if (!uid) {
+      setTokenGuardado(null);
+      return;
+    }
+
+    if (expoToken || fcmToken) {
+      guardarTokenPush(uid, {
+        expoPushToken: expoToken,
+        fcmToken,
+        error: null,
+      }).catch(() => {
+        // Sin conexión o reglas: se reintenta con el botón de recargar.
+      });
+    }
+
+    const desuscribir = subscribeTokenPush(uid, setTokenGuardado, () => {});
+    return desuscribir;
+  }, [uid, cargandoSesion, expoToken, fcmToken]);
+
+  // Estado del recordatorio del reto diario.
+  useEffect(() => {
+    recordatorioDiarioActivo()
+      .then(setRecordatorio)
+      .catch(() => setRecordatorio(false));
+  }, []);
+
+  const alternarRecordatorio = async () => {
+    setCambiandoRecordatorio(true);
+
+    try {
+      if (recordatorio) {
+        await cancelarRecordatorioDiarioAsync();
+        setRecordatorio(false);
+      } else {
+        await programarRecordatorioDiarioAsync();
+        setRecordatorio(true);
+      }
+    } catch (e) {
+      setError(String(e));
+    } finally {
+      setCambiandoRecordatorio(false);
+    }
+  };
+
+  const recargarYGuardar = async () => {
+    const tokens = await cargarTokens();
+
+    if (!uid || (!tokens.expoPushToken && !tokens.fcmToken)) return;
+
+    try {
+      await guardarTokenPush(uid, tokens);
+    } catch (e) {
+      setError(String(e));
+    }
+  };
+
+  const fechaGuardado = tokenGuardado?.actualizadoEn
+    ? new Date(tokenGuardado.actualizadoEn).toLocaleString()
+    : null;
 
   useEffect(() => {
     cargarTokens();
@@ -132,6 +213,26 @@ export default function Notificaciones() {
           {fcmToken ?? '— sin token —'}
         </Text>
 
+        <Text style={styles.seccion}>GUARDADO EN TU CUENTA</Text>
+        <View style={styles.ultimaCard}>
+          <Text style={styles.ultimaTitulo}>
+            {!uid
+              ? 'Inicia sesión para guardar el token'
+              : tokenGuardado
+                ? 'Sí · este dispositivo recibirá push'
+                : 'Todavía no se ha guardado'}
+          </Text>
+          {tokenGuardado && fechaGuardado && (
+            <Text style={styles.ultimaCuerpo}>Actualizado: {fechaGuardado}</Text>
+          )}
+        </View>
+
+        {!remoto.disponible && remoto.motivo && (
+          <View style={styles.errorCard}>
+            <Text style={styles.errorTexto}>{remoto.motivo}</Text>
+          </View>
+        )}
+
         {error && (
           <View style={styles.errorCard}>
             <Text style={styles.errorTexto}>{error}</Text>
@@ -140,11 +241,11 @@ export default function Notificaciones() {
 
         <TouchableOpacity
           style={styles.boton}
-          onPress={cargarTokens}
+          onPress={recargarYGuardar}
           disabled={estado === 'cargando'}
         >
           <Ionicons name="refresh-outline" size={20} color="#00FF88" />
-          <Text style={styles.textoBoton}>RECARGAR TOKENS</Text>
+          <Text style={styles.textoBoton}>RECARGAR Y GUARDAR TOKEN</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -155,6 +256,31 @@ export default function Notificaciones() {
           <Ionicons name="notifications-outline" size={20} color="#050805" />
           <Text style={[styles.textoBoton, styles.textoBotonSecundario]}>
             {probando ? 'ENVIANDO...' : 'PROBAR NOTIFICACIÓN LOCAL'}
+          </Text>
+        </TouchableOpacity>
+
+        <Text style={styles.seccion}>RECORDATORIO DEL RETO DIARIO</Text>
+        <TouchableOpacity
+          style={[styles.boton, recordatorio && styles.botonSecundario]}
+          onPress={alternarRecordatorio}
+          disabled={cambiandoRecordatorio}
+        >
+          <Ionicons
+            name={recordatorio ? 'alarm-outline' : 'alarm'}
+            size={20}
+            color={recordatorio ? '#050805' : '#00FF88'}
+          />
+          <Text
+            style={[
+              styles.textoBoton,
+              recordatorio && styles.textoBotonSecundario,
+            ]}
+          >
+            {cambiandoRecordatorio
+              ? 'GUARDANDO...'
+              : recordatorio
+                ? `DESACTIVAR (${HORA_RECORDATORIO}:00)`
+                : `ACTIVAR (${HORA_RECORDATORIO}:00)`}
           </Text>
         </TouchableOpacity>
 
@@ -171,8 +297,11 @@ export default function Notificaciones() {
         </View>
 
         <Text style={styles.nota}>
-          Recuerda: las notificaciones push remotas NO funcionan en Expo Go en
-          Android. Debes probar con el APK compilado por EAS.
+          Al tocar una notificación, la app abre la pantalla indicada en su
+          campo `url` (por ejemplo `/retos` o `/contenido/C001`). El
+          recordatorio diario usa una notificación local programada a las{' '}
+          {HORA_RECORDATORIO}:00. Recuerda: las notificaciones push remotas NO
+          funcionan en Expo Go en Android; usa el APK compilado por EAS.
         </Text>
       </ScrollView>
     </View>

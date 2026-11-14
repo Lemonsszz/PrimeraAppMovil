@@ -26,11 +26,15 @@ const DATABASE_URL =
 const SCOPE =
   'https://www.googleapis.com/auth/firebase.database https://www.googleapis.com/auth/userinfo.email';
 
+/** Scope necesario para enviar mensajes con FCM V1. */
+export const SCOPE_FCM = 'https://www.googleapis.com/auth/firebase.messaging';
+
 function base64url(input) {
   return Buffer.from(input).toString('base64url');
 }
 
-export async function getAccessToken() {
+/** Lee la cuenta de servicio (client_email, private_key, project_id...). */
+export async function getServiceAccount() {
   const raw = await readFile(KEY_PATH, 'utf8').catch(() => {
     throw new Error(
       `No se encontro la clave de servicio en ${KEY_PATH}. ` +
@@ -38,13 +42,17 @@ export async function getAccessToken() {
     );
   });
 
-  const serviceAccount = JSON.parse(raw);
+  return JSON.parse(raw);
+}
+
+export async function getAccessToken(scope = SCOPE) {
+  const serviceAccount = await getServiceAccount();
   const now = Math.floor(Date.now() / 1000);
 
   const header = { alg: 'RS256', typ: 'JWT' };
   const payload = {
     iss: serviceAccount.client_email,
-    scope: SCOPE,
+    scope,
     aud: serviceAccount.token_uri,
     iat: now,
     exp: now + 3600,
