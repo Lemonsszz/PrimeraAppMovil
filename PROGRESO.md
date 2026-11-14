@@ -340,3 +340,129 @@ dificultad, etiquetas, ejemplo y advertencia cuando aplica.
   El rojo de error y el ámbar de advertencia se conservan por significado.
   Push mantiene su paleta anterior por decisión del usuario.
 
+---
+
+## 8. Reglas de trabajo
+
+Estas reglas aplican a todas las fases del proyecto y están replicadas en
+`AGENTS.md`.
+
+1. **Aprobar antes de commit y merge.** Al terminar una fase o un cambio
+   importante, el agente se detiene y **pregunta al usuario** antes de:
+   - Hacer el commit en la rama correspondiente.
+   - Fusionar (`merge`) a `main`.
+   - Hacer `push` al remoto.
+
+   No se asume la aprobación: se propone el mensaje de commit, la rama y el plan,
+   y se espera confirmación explícita.
+
+2. **Ramas.**
+   - `main` siempre estable y compilable.
+   - `feat/...`, `fix/...`, `docs/...`, `chore/...` según el tipo de cambio.
+   - Antes de fusionar: `npx tsc --noEmit` debe pasar.
+
+3. **Documentación viva.** Mantener este archivo actualizado al final de cada
+   fase (qué se hizo, qué falta, decisiones y problemas).
+
+4. **Contenido y datos.** El contenido lo aporta el usuario. Antes de cambiar o
+   añadir datos en Firebase, consultar. El agente no inventa contenido.
+
+5. **Verificación.** `npx tsc --noEmit` antes de cerrar una fase; probar en Expo
+   Go antes de compilar el APK; nunca subir secretos.
+
+6. **Estilo visual.** Paleta oficial en todos los tabs excepto Push.
+
+---
+
+## 9. Cómo mover el proyecto a otra computadora
+
+El código está en GitHub y la configuración de Firebase/EAS necesaria para
+compilar ya está versionada. La clave de servicio (`google-service-account.json`)
+es secreta y **no** se versiona.
+
+### Lo que viaja en el repositorio
+
+| Archivo | ¿Versionado? | Para qué |
+| --- | --- | --- |
+| Todo `src/`, `scripts/`, configuración | ✅ | Código de la app y scripts de datos |
+| `google-services.json` | ✅ | Build Android (Firebase) |
+| `src/firebaseconfig.js` | ✅ | Config del cliente Firebase |
+| `package-lock.json` | ✅ | Instalación reproducible (`npm ci`) |
+| `google-service-account.json` | ❌ (ignorado) | Solo para scripts de admin de la BD |
+
+### Pasos en la computadora nueva
+
+1. **Instalar requisitos**
+   - [Git](https://git-scm.com/downloads)
+   - [Node.js LTS](https://nodejs.org/) (18, 20 o 22 LTS; se recomienda LTS, no la
+     última versión de desarrollo)
+   - App **Expo Go** en el teléfono (Android/iOS) para probar.
+
+2. **Clonar el repositorio**
+
+   ```powershell
+   git clone https://github.com/Lemonsszz/PrimeraAppMovil.git
+   cd PrimeraAppMovil
+   ```
+
+3. **Instalar dependencias exactas**
+
+   ```powershell
+   npm ci
+   ```
+
+4. **Verificar que compila**
+
+   ```powershell
+   npx tsc --noEmit
+   ```
+
+5. **Arrancar en desarrollo**
+
+   ```powershell
+   npx expo start
+   ```
+
+   Escanear el QR con Expo Go (el teléfono y la computadora deben estar en la
+   misma red Wi-Fi). Si la red lo bloquea:
+
+   ```powershell
+   npx expo start --tunnel
+   ```
+
+6. **Probar la app.** Debe cargar los 57 contenidos y los retos desde Firebase
+   sin pasos extra: la configuración pública ya está en el repo.
+
+### Solo si se van a ejecutar los scripts de datos
+
+Los scripts (`datos:importar`, `datos:retos`, `datos:reglas`, etc.) usan una
+cuenta de servicio con permisos de administrador. En la computadora nueva hay que
+crear `google-service-account.json` en la raíz con la clave descargada desde
+Firebase Console → Configuración del proyecto → Cuentas de servicio. **Ese
+archivo nunca se comparte ni se sube al repo.**
+
+Sin ese archivo la app funciona igual; solo fallan los scripts que escriben en la
+base de datos.
+
+### Para compilar el APK en la computadora nueva
+
+```powershell
+npx eas-cli login
+npx eas-cli build -p android --profile preview
+```
+
+Se necesita una cuenta con acceso al proyecto EAS
+(`8cc98c1e-11e7-48f5-bc72-c97e08fe30f2`). El build se ejecuta en la nube de EAS,
+así que no hace falta Android Studio.
+
+### Si se copia la carpeta por USB en vez de clonar
+
+Copiar todo **excepto** `node_modules/` y `.expo/` (se regeneran). Luego:
+
+```powershell
+npm ci
+npx expo start
+```
+
+No copiar `google-service-account.json` a menos que sea necesario y de confianza.
+
