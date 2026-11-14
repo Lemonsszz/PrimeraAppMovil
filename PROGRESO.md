@@ -47,6 +47,7 @@ npx tsc --noEmit          # verificación de tipos
 npx eas build -p android --profile preview   # genera APK
 
 node scripts/migrar-contenidos.mjs   # migrar/actualizar datos a `contenidos`
+node scripts/importar-contenidos.mjs # importar el lote de contenidos del usuario
 node scripts/seed-retos.mjs          # cargar/actualizar el banco de retos
 node scripts/reglas-firebase.mjs     # publicar reglas (contenidos, retos, progreso)
 ```
@@ -58,7 +59,7 @@ node scripts/reglas-firebase.mjs     # publicar reglas (contenidos, retos, progr
 | Área | Estado |
 | --- | --- |
 | Login / registro con Firebase Auth | ✅ Funciona |
-| Modelo unificado `contenidos` | ✅ Migrado y normalizado (2026-11-14) |
+| Modelo unificado `contenidos` | ✅ 57 contenidos en 10 categorías (2026-11-14) |
 | Lectura de contenidos (Realtime DB) | ✅ Funciona |
 | Notificaciones locales y tokens | ✅ Funciona |
 | Navegación por pestañas | ✅ Funciona (Inicio, Push, Comandos, Retos, Buscar, Perfil) |
@@ -108,6 +109,9 @@ node scripts/reglas-firebase.mjs     # publicar reglas (contenidos, retos, progr
 - [ ] Crear contenido desde la app (hoy se carga con scripts).
 - [ ] Editar y eliminar contenido.
 - [x] **Búsqueda real en vivo** sobre título, resumen, categoría, plataforma y etiquetas.
+- [x] **Ampliación del banco de contenidos**: 51 entradas nuevas + Hydra actualizado
+      (57 en total) en 10 categorías: LINUX, WINDOWS, NETWORKING, SECURITY, RECON,
+      WEB, ACTIVE_DIRECTORY, PRIVESC, CRYPTO, FORENSE y CLOUD.
 - [x] **Comandos organizados por tarjetas de categoría** con contador y descripción.
 - [x] **Pantalla de categoría** (`/categoria/[categoria]`) con su propio buscador.
 - [x] **Inicio introductorio** con accesos directos a las demás pestañas y CTA del reto diario (sustituye a "AGREGAR COMANDO").
@@ -306,6 +310,7 @@ dificultad, etiquetas, ejemplo y advertencia cuando aplica.
 | 2026-11-14 | Migración a `contenidos`: 6 comandos normalizados (typos, sintaxis de nmap, plataforma, dificultad, tags, riesgo). Regla pública de `contenidos` publicada. App leyendo `contenidos` y búsqueda real funcionando. |
 | 2026-11-14 | Reto diario: 31 preguntas cargadas en `retos`, reglas de `retos` y `progreso/$uid` publicadas, pestaña Retos sustituye a Notas, inicio introductorio, comandos por categorías con buscador propio. |
 | 2026-11-14 | Paleta verde bosque aplicada en Inicio, Comandos, Retos, Buscar, Perfil, detalle de categoría y login. Push queda intacto; rojo de error y ámbar de advertencia se mantienen por semántica. |
+| 2026-11-14 | Importados 51 contenidos nuevos y actualizado Hydra: 57 contenidos en 10 categorías. Se corrigieron placeholders perdidos al pegar (`<IP>`, `<WORDLIST>`, etc.) y dos títulos inexactos (Gobuster y Curl). |
 
 ---
 

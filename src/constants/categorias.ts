@@ -34,6 +34,30 @@ export const CATEGORIAS: Record<string, InfoCategoria> = {
     icono: 'skull-outline',
     descripcion: 'Herramientas de Kali Linux',
   },
+  WEB: {
+    icono: 'globe-outline',
+    descripcion: 'Aplicaciones, APIs y CMS',
+  },
+  ACTIVE_DIRECTORY: {
+    icono: 'business-outline',
+    descripcion: 'Dominios y redes Windows',
+  },
+  PRIVESC: {
+    icono: 'trending-up-outline',
+    descripcion: 'Escalada de privilegios',
+  },
+  CRYPTO: {
+    icono: 'key-outline',
+    descripcion: 'Criptografía y contraseñas',
+  },
+  FORENSE: {
+    icono: 'flask-outline',
+    descripcion: 'Análisis forense y memoria',
+  },
+  CLOUD: {
+    icono: 'cloud-outline',
+    descripcion: 'Contenedores y nube',
+  },
 };
 
 export const CATEGORIA_POR_DEFECTO: InfoCategoria = {
