@@ -68,9 +68,10 @@ node scripts/reglas-firebase.mjs     # publicar reglas (contenidos, retos, progr
 | Comandos agrupados por categoría + buscador por categoría | ✅ Funciona |
 | Reto diario (preguntas, puntos y racha) | ✅ Funciona (31 preguntas) |
 | Paleta verde bosque en todos los tabs (excepto Push) | ✅ Aplicada (2026-11-14) |
-| Crear / editar / borrar comandos | ⛔ No existe |
-| Favoritos / perfil real | ⛔ Maqueta |
-| Persistencia de sesión / logout | ⛔ No existe |
+| Crear / editar / borrar comandos | ✅ Funciona (requiere sesión) |
+| Perfil real (nombre, email, estadísticas) | ✅ Funciona (2026-11-14) |
+| Favoritos | ⛔ No existe |
+| Persistencia de sesión / logout | ✅ Funciona (AsyncStorage + Firebase Auth) |
 | Reglas de seguridad de Firebase | ✅ Aplicadas y verificadas (2026-11-14) |
 | Prueba local sin APK | ✅ Expo Go / Metro |
 | APK de entrega | 🟡 Configurado, pendiente de compilar |
@@ -139,10 +140,10 @@ node scripts/reglas-firebase.mjs     # publicar reglas (contenidos, retos, progr
 
 ### Fase 2 — Cuenta, datos y seguridad
 
-- [ ] Persistencia de sesión (`onAuthStateChanged` + AsyncStorage) y guard de rutas.
-- [ ] Cerrar sesión y borrar datos locales.
-- [ ] Recuperar contraseña (`sendPasswordResetEmail`).
-- [ ] Perfil real: email, nombre, estadísticas calculadas.
+- [x] Persistencia de sesión (`initializeAuth` + `getReactNativePersistence(AsyncStorage)`) y guard de rutas: `/` redirige a Inicio si hay sesión o al login si no.
+- [x] Cerrar sesión desde Perfil (vuelve al login).
+- [x] Recuperar contraseña (`sendPasswordResetEmail`) desde Perfil.
+- [x] Perfil real: email, nombre editable (`Usuarios/{uid}` + `displayName`), aportes y estadísticas calculadas (contenidos, categorías, puntos y racha).
 - [x] Reglas de Realtime Database: lectura pública de `Comandos`, `contenidos` y `retos`; escritura autenticada; `Usuarios` protegido; `progreso/$uid` solo para su dueño. Verificado 2026-11-14.
 - [ ] Firebase App Check.
 - [ ] Mover configuración de Firebase a variables de entorno (`EXPO_PUBLIC_*`).
@@ -293,6 +294,8 @@ dificultad, etiquetas, ejemplo y advertencia cuando aplica.
 - [ ] `npx eas build -p android --profile preview` termina correctamente.
 - [ ] Instalar el APK en un dispositivo real y probar:
   - [ ] login / registro / invitado,
+  - [ ] sesión persistente al cerrar y reabrir la app,
+  - [ ] perfil: editar nombre, recuperar contraseña y cerrar sesión,
   - [ ] pestaña Buscar (no debe crashear),
   - [ ] categorías de Comandos y su buscador,
   - [ ] reto diario completo (puntos y racha se guardan al iniciar sesión),
@@ -314,6 +317,7 @@ dificultad, etiquetas, ejemplo y advertencia cuando aplica.
 | 2026-11-14 | Importados 51 contenidos nuevos y actualizado Hydra: 57 contenidos en 10 categorías. Se corrigieron placeholders perdidos al pegar (`<IP>`, `<WORDLIST>`, etc.) y dos títulos inexactos (Gobuster y Curl). |
 | 2026-11-14 | Pantalla de detalle `/contenido/[id]` con metadatos, pasos de estrategia, nota y referencias. Copiado al portapapeles (`expo-clipboard`) en comando, ejemplo y pasos. Las tarjetas de categoría y los resultados de búsqueda ahora abren el detalle. |
 | 2026-11-14 | CRUD de contenidos: formulario `/contenido/editar` (crear y editar, con pasos para estrategias) y eliminación con confirmación desde el detalle. Botón `+` en Comandos. Escrituras solo con sesión iniciada (regla `auth != null`). |
+| 2026-11-14 | Cuenta y sesión reales: sesión persistente con `initializeAuth` + AsyncStorage, raíz que entra directo a Inicio si hay sesión, Perfil con datos de Firebase Auth, nombre editable en `Usuarios/{uid}` sincronizado con `displayName`, estadísticas reales (contenidos, categorías, puntos y racha), recuperar contraseña y cerrar sesión. |
 
 ---
 
