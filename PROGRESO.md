@@ -66,6 +66,7 @@ node scripts/reglas-firebase.mjs     # publicar reglas (contenidos, retos, progr
 | Inicio introductorio con accesos directos | ✅ Funciona |
 | Comandos agrupados por categoría + buscador por categoría | ✅ Funciona |
 | Reto diario (preguntas, puntos y racha) | ✅ Funciona (31 preguntas) |
+| Paleta verde bosque en todos los tabs (excepto Push) | ✅ Aplicada (2026-11-14) |
 | Crear / editar / borrar comandos | ⛔ No existe |
 | Favoritos / perfil real | ⛔ Maqueta |
 | Persistencia de sesión / logout | ⛔ No existe |
@@ -304,6 +305,7 @@ dificultad, etiquetas, ejemplo y advertencia cuando aplica.
 | 2026-11-14 | Reglas de Firebase aplicadas y verificadas (raíz y `Usuarios` en 401, `Comandos` público para invitado). Detectados 4 campos mal escritos en la base y propuesto el modelo `contenidos`. |
 | 2026-11-14 | Migración a `contenidos`: 6 comandos normalizados (typos, sintaxis de nmap, plataforma, dificultad, tags, riesgo). Regla pública de `contenidos` publicada. App leyendo `contenidos` y búsqueda real funcionando. |
 | 2026-11-14 | Reto diario: 31 preguntas cargadas en `retos`, reglas de `retos` y `progreso/$uid` publicadas, pestaña Retos sustituye a Notas, inicio introductorio, comandos por categorías con buscador propio. |
+| 2026-11-14 | Paleta verde bosque aplicada en Inicio, Comandos, Retos, Buscar, Perfil, detalle de categoría y login. Push queda intacto; rojo de error y ámbar de advertencia se mantienen por semántica. |
 
 ---
 
@@ -327,4 +329,9 @@ dificultad, etiquetas, ejemplo y advertencia cuando aplica.
   seria habría que validar en servidor.
 - La pestaña **Notas** se eliminó: su hueco lo ocupa **Retos**. Las notas
   personales quedan como extra futuro dentro del detalle de cada contenido.
+- **Paleta oficial** (todos los tabs excepto Push): negro `#050805` como base,
+  `#61CF5A` (acción primaria), `#63AD58` (texto secundario), `#50864C` (texto
+  apagado), `#3E6A3D` (bordes) y `#3B4B33` (bordes suaves/fondos discretos).
+  El rojo de error y el ámbar de advertencia se conservan por significado.
+  Push mantiene su paleta anterior por decisión del usuario.
 
