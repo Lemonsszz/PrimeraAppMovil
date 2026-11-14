@@ -19,6 +19,7 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="categoria/[categoria]" />
         <Stack.Screen name="contenido/[id]" />
+        <Stack.Screen name="contenido/editar" />
       </Stack>
     </SafeAreaProvider>
   );

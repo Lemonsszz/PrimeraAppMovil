@@ -38,3 +38,9 @@ export type Contenido = {
   creadoEn?: number;
   actualizadoEn?: number;
 };
+
+/** Datos que se envían a la base al crear o editar un contenido (sin ID ni fechas). */
+export type DatosContenido = Omit<
+  Contenido,
+  'id' | 'creadoPor' | 'creadoEn' | 'actualizadoEn'
+>;

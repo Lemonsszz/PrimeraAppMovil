@@ -1,8 +1,9 @@
-import { onValue, ref } from 'firebase/database';
+import { get, onValue, ref, remove, set, update } from 'firebase/database';
 
 import { database } from '../firebaseconfig';
 import type {
   Contenido,
+  DatosContenido,
   Dificultad,
   NivelRiesgo,
   PasoEstrategia,
@@ -192,4 +193,97 @@ export function filtrarContenidos(lista: Contenido[], consulta: string): Conteni
 
     return terminos.every((termino) => textoBuscable.includes(termino));
   });
+}
+
+function textoONull(valor: string | undefined): string | null {
+  const limpio = valor?.trim();
+  return limpio ? limpio : null;
+}
+
+function listaONull(valor: string[] | undefined): string[] | null {
+  const limpia = (valor ?? []).map((item) => item.trim()).filter(Boolean);
+  return limpia.length > 0 ? limpia : null;
+}
+
+function pasosLimpios(
+  pasos: PasoEstrategia[] | undefined
+): PasoEstrategia[] | null {
+  const limpios = (pasos ?? [])
+    .map((paso) => ({
+      titulo: paso.titulo?.trim() || undefined,
+      detalle: paso.detalle?.trim() || undefined,
+      comando: paso.comando?.trim() || undefined,
+    }))
+    .filter((paso) => paso.titulo || paso.detalle || paso.comando);
+
+  return limpios.length > 0 ? limpios : null;
+}
+
+function cargaUtil(datos: DatosContenido): Record<string, unknown> {
+  return {
+    tipo: datos.tipo,
+    titulo: datos.titulo.trim(),
+    resumen: datos.resumen.trim(),
+    categoria: datos.categoria.trim().toUpperCase(),
+    plataformas: listaONull(datos.plataformas) ?? [],
+    tags: listaONull(datos.tags) ?? [],
+    cuerpo: textoONull(datos.cuerpo),
+    ejemplo: textoONull(datos.ejemplo),
+    dificultad: datos.dificultad ?? null,
+    riesgo: datos.riesgo ?? null,
+    advertencia: textoONull(datos.advertencia),
+    nota: textoONull(datos.nota),
+    referencias: listaONull(datos.referencias),
+    pasos: datos.tipo === 'estrategia' ? pasosLimpios(datos.pasos) : null,
+  };
+}
+
+/** Calcula el siguiente ID `C0NN` a partir de los contenidos existentes. */
+async function siguienteId(): Promise<string> {
+  const snapshot = await get(ref(database, 'contenidos'));
+  const datos = snapshot.val() as Record<string, unknown> | null;
+
+  let maximo = 0;
+  for (const clave of Object.keys(datos ?? {})) {
+    const coincidencia = /^C(\d+)$/i.exec(clave);
+    if (coincidencia) {
+      maximo = Math.max(maximo, Number(coincidencia[1]));
+    }
+  }
+
+  return `C${String(maximo + 1).padStart(3, '0')}`;
+}
+
+/** Crea un contenido y devuelve su ID. Requiere sesión iniciada. */
+export async function crearContenido(
+  datos: DatosContenido,
+  uid: string
+): Promise<string> {
+  const id = await siguienteId();
+  const ahora = Date.now();
+
+  await set(ref(database, `contenidos/${id}`), {
+    ...cargaUtil(datos),
+    creadoPor: uid,
+    creadoEn: ahora,
+    actualizadoEn: ahora,
+  });
+
+  return id;
+}
+
+/** Actualiza un contenido existente. Los campos vacíos se eliminan. */
+export async function actualizarContenido(
+  id: string,
+  datos: DatosContenido
+): Promise<void> {
+  await update(ref(database, `contenidos/${id}`), {
+    ...cargaUtil(datos),
+    actualizadoEn: Date.now(),
+  });
+}
+
+/** Elimina un contenido por su ID. */
+export async function eliminarContenido(id: string): Promise<void> {
+  await remove(ref(database, `contenidos/${id}`));
 }

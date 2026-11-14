@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -15,7 +16,8 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { infoCategoria } from '../../constants/categorias';
-import { subscribeContenido } from '../../services/contenidos';
+import { useUsuario } from '../../services/auth';
+import { eliminarContenido, subscribeContenido } from '../../services/contenidos';
 import type { Contenido } from '../../types/contenido';
 
 const COLOR_RIESGO: Record<string, string> = {
@@ -29,6 +31,7 @@ export default function DetalleContenido() {
   const router = useRouter();
   const parametros = useLocalSearchParams<{ id?: string }>();
   const id = parametros.id ?? '';
+  const { uid } = useUsuario();
 
   const [contenido, setContenido] = useState<Contenido | null>(null);
   const [cargando, setCargando] = useState(true);
@@ -71,6 +74,35 @@ export default function DetalleContenido() {
 
     if (temporizador.current) clearTimeout(temporizador.current);
     temporizador.current = setTimeout(() => setCopiado(null), 1800);
+  };
+
+  const confirmarEliminar = () => {
+    if (!contenido) return;
+
+    Alert.alert(
+      'Eliminar contenido',
+      `¿Seguro que quieres eliminar “${contenido.titulo}”? Esta acción no se puede deshacer.`,
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Eliminar',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await eliminarContenido(contenido.id);
+              router.replace('/comandos' as never);
+            } catch (e) {
+              Alert.alert(
+                'Error al eliminar',
+                e instanceof Error
+                  ? e.message
+                  : 'No se pudo eliminar el contenido.'
+              );
+            }
+          },
+        },
+      ]
+    );
   };
 
   const info = infoCategoria(contenido?.categoria ?? '');
@@ -150,6 +182,36 @@ export default function DetalleContenido() {
               </View>
             ))}
           </View>
+
+          {uid ? (
+            <View style={styles.acciones}>
+              <TouchableOpacity
+                style={styles.accion}
+                onPress={() =>
+                  router.push(`/contenido/editar?id=${contenido.id}` as never)
+                }
+                activeOpacity={0.8}
+                accessibilityRole="button"
+                accessibilityLabel="Editar contenido"
+              >
+                <Ionicons name="create-outline" size={15} color="#61CF5A" />
+                <Text style={styles.accionTexto}>EDITAR</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.accion, styles.accionPeligro]}
+                onPress={confirmarEliminar}
+                activeOpacity={0.8}
+                accessibilityRole="button"
+                accessibilityLabel="Eliminar contenido"
+              >
+                <Ionicons name="trash-outline" size={15} color="#FF5252" />
+                <Text style={[styles.accionTexto, styles.accionTextoPeligro]}>
+                  ELIMINAR
+                </Text>
+              </TouchableOpacity>
+            </View>
+          ) : null}
 
           {contenido.advertencia ? (
             <View style={styles.advertenciaCaja}>
@@ -388,6 +450,39 @@ const styles = StyleSheet.create({
     color: '#63AD58',
     fontSize: 10,
     letterSpacing: 0.5,
+  },
+
+  acciones: {
+    flexDirection: 'row',
+    gap: 8,
+    marginTop: 16,
+  },
+
+  accion: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    borderWidth: 1,
+    borderColor: '#3E6A3D',
+    borderRadius: 5,
+    paddingVertical: 7,
+    paddingHorizontal: 11,
+    backgroundColor: '#080D0A',
+  },
+
+  accionPeligro: {
+    borderColor: '#FF5252',
+  },
+
+  accionTexto: {
+    color: '#61CF5A',
+    fontSize: 10,
+    fontWeight: '800',
+    letterSpacing: 1,
+  },
+
+  accionTextoPeligro: {
+    color: '#FF5252',
   },
 
   advertenciaCaja: {
